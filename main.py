@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.f_app = f_app
         self.webEngineView = QWebEngineView()
         self.setCentralWidget(self.webEngineView)
-        self.webEngineView.load(QUrl(f"http://192.168.1.64:874/"))
+        self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
         # vbox.addWidget(self.webEngineView)
 
         # self.setLayout(vbox)
@@ -90,9 +90,23 @@ class Config(object):
 # app.run("0.0.0.0", port=874)
 # print("MMMM")
 app_ = Flask(__name__)
+connected_users = []
 user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
+
+@app_.route('/connect')
+def connect():
+    if request.remote_addr == request.host:
+        return jsonify({'status': 'false'})
+    try:
+        r = requests.request("get", f"http://{request.remote_addr}:874/", timeout=0.01).json()
+        if r['teacher'] == False and user_config['teacher'] == True and not request.remote_addr in connected_users:
+            connected_users.append(request.remote_addr)
+            return jsonify({'status': 'true'})
+        return jsonify({'status': 'false'})
+    except:
+        return jsonify({'status': 'false'})
 
 
 @app_.route('/join', methods=["POST", "GET"])
@@ -112,9 +126,10 @@ def find_local_users():
     for i in range(1, 255):
         try:
             r = requests.request("get", f"http://192.168.1.{i}:874/", timeout=0.01)
-            data.append({f"192.168.1.{i}:874": r.json()})
+            data.append([f"192.168.1.{i}", r.json()])
         except:
             pass
+    user_config["last_scan"] = jsonify(data)
     return jsonify(data)
 
 
@@ -123,8 +138,8 @@ def index():
     if request.host.split(':')[0] == request.remote_addr:
         if not user_config.__contains__("username"):
             return redirect("/join")
-        return render_template("index.html", user_config=user_config)
-    return jsonify({"teacher": user_config["teacher"]})
+        return render_template("index.html", user_config=user_config, connected_users=connected_users)
+    return jsonify({"teacher": user_config["teacher"], "username": user_config["username"]})
 
 app = QApplication(sys.argv)
 window = MainWindow(app_)

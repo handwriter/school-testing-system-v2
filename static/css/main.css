@@ -9,7 +9,9 @@
 }
 
 
-
+body {
+    background-image: url(/static/img/background.svg);
+}
 
 form {
     padding: 27px;

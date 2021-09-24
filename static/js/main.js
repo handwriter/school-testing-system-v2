@@ -6,8 +6,12 @@ function updateLocalUsersData() {
     type: 'GET',
     url: '/find_local_users',
     data: {},
-    dataType: 'text',
-    success: function(data) { document.getElementById("221").innerText = data; }, // обработка ответа от сервера
+    dataType: 'json',
+    success: function(data) {
+        data.forEach(function(item, i, arr) {
+          alert( i + ": " + item + " (массив:" + arr + ")" );
+        });
+        }, // обработка ответа от сервера
     error: function(jqXHR) { console.log('Ошибка выполнения'); },
     complete: function() { console.log('Завершение выполнения'); }
 });
