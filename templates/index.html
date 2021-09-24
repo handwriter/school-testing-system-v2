@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</head>
+<body>
+    <p>Имя: {{ user_config['username'] }}</p>
+    <p>Пользователи в локальной сети:</p>
+    <table class="users-table">
+        <tr>
+            <td>IP</td>
+            <td>Статус</td>
+        </tr>
+    </table>
+    <a id="221" onclick="updateLocalUsersData()">Обновить</a>
+</body>
+</html>

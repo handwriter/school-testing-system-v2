@@ -1,7 +1,48 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect, jsonify
 import json
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QApplication
+from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from PyQt5.QtCore import QUrl, Qt
+import nmap
+import os
+import pythonping
 from pathlib import Path
+import base64
+from threading import Thread
+import sys
+import requests
 
+import socket
+
+
+def get_my_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    name = s.getsockname()[0]
+    s.close()
+    return name
+
+
+class MainWindow(QMainWindow):
+    def __init__(self, f_app: Flask, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
+        # widget = QWidget()
+        # label = QLabel("Flask is running...")
+        # self.layout = QVBoxLayout()
+        # self.browser = QWebEnginePage()
+        # # self.layout.addWidget(label)
+        # self.layout.addWidget(self.browser)
+        # widget.setLayout(self.layout)
+        # self.setCentralWidget(widget)
+        # vbox = QVBoxLayout(self)
+        self.f_app = f_app
+        self.webEngineView = QWebEngineView()
+        self.setCentralWidget(self.webEngineView)
+        self.webEngineView.load(QUrl(f"http://192.168.1.64:874/"))
+        # vbox.addWidget(self.webEngineView)
+
+        # self.setLayout(vbox)
+        # Thread(target=while_flask_app_loaded, args=[f_app, self.webEngineView]).start()
 
 class Config(object):
     config = {}
@@ -21,13 +62,18 @@ class Config(object):
         self.config[item] = value
         self.save_config()
 
+    def __contains__(self, item):
+        return item in self.config
+
     @staticmethod
     def load_config(path: str) -> dict:
-        with open(path, "w") as config_file:
+        with open(path, "r") as config_file:
             try:
                 return json.load(config_file)
-            except:
-                json.dump({}, config_file)
+            except Exception as e:
+                print(e)
+                with open(path, "w") as err_config_file:
+                    json.dump({}, err_config_file)
                 return {}
 
     def save_config(self) -> bool:
@@ -38,13 +84,50 @@ class Config(object):
             except:
                 return False
 
+# app = Flask(__name__)
 
-app = Flask(__name__)
+#
+# app.run("0.0.0.0", port=874)
+# print("MMMM")
+app_ = Flask(__name__)
 user_config = Config("config.json")
+kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
+flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
 
 
-@app.route('/')
+@app_.route('/join', methods=["POST", "GET"])
+def join():
+    if request.method == 'POST':
+        try:
+            user_config["username"] = request.form["username"]
+            user_config["teacher"] = request.form["user_type"] == "1"
+            return redirect("/")
+        except:
+            pass
+    return render_template("login.html")
+
+@app_.route('/find_local_users')
+def find_local_users():
+    data = []
+    for i in range(1, 255):
+        try:
+            r = requests.request("get", f"http://192.168.1.{i}:874/", timeout=0.01)
+            data.append({f"192.168.1.{i}:874": r.json()})
+        except:
+            pass
+    return jsonify(data)
+
+
+@app_.route("/")
 def index():
-    return "Hello, world!"
+    if request.host.split(':')[0] == request.remote_addr:
+        if not user_config.__contains__("username"):
+            return redirect("/join")
+        return render_template("index.html", user_config=user_config)
+    return jsonify({"teacher": user_config["teacher"]})
 
-app.run("0.0.0.0")
+app = QApplication(sys.argv)
+window = MainWindow(app_)
+window.setWindowFlags(Qt.CustomizeWindowHint)
+window.show()
+app.exec_()

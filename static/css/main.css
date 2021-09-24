@@ -1,0 +1,96 @@
+@font-face {
+    font-family: Garet-Book; /* Гарнитура шрифта */
+    src: url(/static/fonts/Garet-Book.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Garet-Heavy; /* Гарнитура шрифта */
+    src: url(/static/fonts/Garet-Heavy.ttf); /* Путь к файлу со шрифтом */
+}
+
+
+
+
+form {
+    padding: 27px;
+    background: rgb(85,34,195);
+    background: linear-gradient(0deg, rgba(85,34,195,1) 0%, rgba(8,67,255,1) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    margin-left: -152px;
+    margin-top: -106.5px;
+}
+
+button[type="submit"] {
+    background-color: #0F92FE;
+    color: white;
+    font-family: "Garet-Book";
+}
+
+form input[type="text"] {
+    width: -webkit-fill-available;
+}
+
+form button[type="submit"] {
+    margin-top: 10px;
+    font-size: 16px;
+    border-style: hidden;
+    padding: 6px 25px 6px 25px;
+    width: fit-content;
+    border-radius: 20px;
+}
+
+form .radio-list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+input[type="text"] {
+    border-radius: 25px;
+    font-size: 16px;
+    padding: 8px 0px 8px 22px;
+    border-style: hidden;
+    font-family: "Garet-Book";
+}
+
+input[type="text"]:focus, input[type="text"]:active {
+    outline: none;
+}
+
+.radio {
+    display: flex;
+}
+
+.radio-list .radio:first-of-type label {
+    border-radius: 9px 9px 0px 0px;
+}
+
+.radio-list .radio:last-of-type label {
+    border-radius: 0px 0px 9px 9px;
+}
+
+
+
+.radio label {
+    font-family: "Garet-Heavy";
+    background-color: #04082C;
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 9px;
+}
+
+.radio input[type="radio"]:checked+label {
+    background-color: #0F92FE;
+}
+
+
+.radio input[type="radio"] {
+    display: none;
+}
