@@ -139,7 +139,7 @@ function addRow(username, teacher, connected_users, ip)
   } else {
       scoreText = document.createTextNode('Ученик');
   }
-  var userStatus = NaN;
+  var userStatus = false;
   if (user_data['teacher']) {
       userStatus = document.createElement('img');
       if (connected_users.indexOf(ip) >= 0) {
@@ -164,7 +164,7 @@ function addRow(username, teacher, connected_users, ip)
 
   usernameCell.appendChild(usernameText);
   teacherCell.appendChild(scoreText);
-  if (!isNaN(userStatus)) {
+  if (userStatus) {
       statusCell.appendChild(userStatus);
   }
 }

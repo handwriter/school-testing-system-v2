@@ -133,7 +133,8 @@ def connect_to():
         return jsonify({'status': 'false'})
     try:
         data = requests.get(f"http://{request.args['addr']}:874/connect", timeout=0.5).json()
-        if data['status'] == True:
+        print(data)
+        if data['status'] == 'true':
             connected_teacher = request.args['addr']
         return jsonify(data)
     except Exception as e:
