@@ -97,6 +97,7 @@ class Config(object):
 # print("MMMM")
 app_ = Flask(__name__)
 connected_users = []
+connected_teacher = ""
 user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
@@ -128,7 +129,10 @@ def connect_to():
     if not "addr" in request.args:
         return jsonify({'status': 'false'})
     try:
-        return requests.get(f"http://{request.args['addr']}:874/", timeout=0.01).json()
+        data = requests.get(f"http://{request.args['addr']}:874/", timeout=0.01).json()
+        if data['status'] == 'true':
+            connected_teacher = request.args['addr']
+        return jsonify(data)
     except:
         return jsonify({'status': 'false'})
 
@@ -160,7 +164,7 @@ def find_local_users():
 
 @app_.route('/user_data')
 def usr_data():
-    usr = {'connected_users': connected_users}
+    usr = {'connected_users': connected_users, "connected_teacher": connected_teacher}
     usr.update(user_config.config)
     if request.host.split(':')[0] == request.remote_addr:
         return jsonify(usr)

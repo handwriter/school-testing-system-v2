@@ -121,7 +121,7 @@ function updateLocalUsersData() {
 
 function connectToTeacher(addr) {
 
-    SendRequest("GET","/connect_to", "addr="+addr, Handler, true);
+    SendRequest("GET","/connect_to", "addr="+addr, function() {location.reload()}, true);
 }
 
 
@@ -148,12 +148,23 @@ function addRow(username, teacher, connected_users, ip)
           userStatus.setAttribute("src", "/static/img/cross.svg");
       }
   }
-  else {
+  else if (teacher) {
       userStatus = document.createElement('a');
-      userStatus.setAttribute("onclick", "connectToTeacher(" + ip + ")")
-      userStatus.innerHTML = "<button>Подключиться</button>"
+      if (ip != user_data['connected_teacher']) {
+          if (user_data['connected_teacher'] == '') {
+              userStatus.setAttribute("onclick", "connectToTeacher('" + ip + "');");
+              userStatus.innerHTML = "<button>Подключиться</button>";
+          }
+      }
+      else {
+          userStatus.setAttribute("onclick", "disconnectFromTeacher('" + ip + "');");
+          userStatus.innerHTML = "<button>Отключиться</button>";
+      }
   }
-  statusCell.appendChild(userStatus);
+
   usernameCell.appendChild(usernameText);
   teacherCell.appendChild(scoreText);
+  if (!isNaN(userStatus)) {
+      statusCell.appendChild(userStatus);
+  }
 }
