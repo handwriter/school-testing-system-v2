@@ -126,6 +126,7 @@ def connect():
 
 @app_.route("/connect_to")
 def connect_to():
+    global connected_teacher
     if not "addr" in request.args:
         return jsonify({'status': 'false'})
     try:
