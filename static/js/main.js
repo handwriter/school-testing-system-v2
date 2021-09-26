@@ -124,6 +124,12 @@ function connectToTeacher(addr) {
     SendRequest("GET","/connect_to", "addr="+addr, function() {location.reload()}, true);
 }
 
+function disconnectFromTeacher() {
+
+    SendRequest("GET","/disconnect_from", "", function() {location.reload()}, true);
+}
+
+
 
 function addRow(username, teacher, connected_users, ip)
 {
@@ -157,7 +163,7 @@ function addRow(username, teacher, connected_users, ip)
           }
       }
       else {
-          userStatus.setAttribute("onclick", "disconnectFromTeacher('" + ip + "');");
+          userStatus.setAttribute("onclick", "disconnectFromTeacher();");
           userStatus.innerHTML = "<button>Отключиться</button>";
       }
   }

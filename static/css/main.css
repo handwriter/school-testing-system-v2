@@ -239,6 +239,10 @@ table tbody tr td img {
     width: 25px;
 }
 
+tr button {
+    margin: 0px;
+}
+
 table.inactive {
     display: none;
 }

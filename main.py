@@ -141,6 +141,26 @@ def connect_to():
         print(e)
         return jsonify({'status': 'false'})
 
+@app_.route("/disconnect")
+def disconnect():
+    if not 'addr' in request.args:
+        return jsonify({'status': 'false'})
+    if request.remote_addr != request.args['addr'] or not request.args['addr'] in connected_users or not user_config["teacher"]:
+        return jsonify({'status': 'false'})
+    connected_users.remove(request.args['addr'])
+    return jsonify({'status': 'true'})
+
+@app_.route("/disconnect_from")
+def disconnect_from():
+    if request.host.split(':')[0] != request.remote_addr or connected_teacher == '' or user_config["teacher"]:
+        return jsonify({'status': 'false'})
+    try:
+        data = requests.get(f"http://{connected_teacher}:874/disconnect?addr={request.host.split(':')[0]}", timeout=0.5).json()
+        return data
+    except:
+        return jsonify({'status': 'false'})
+
+
 @app_.route('/join', methods=["POST", "GET"])
 def join():
     if request.method == 'POST':
