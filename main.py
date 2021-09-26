@@ -126,15 +126,18 @@ def connect():
 
 @app_.route("/connect_to")
 def connect_to():
+    print('cccc')
     global connected_teacher
     if not "addr" in request.args:
+        print("nnottt")
         return jsonify({'status': 'false'})
     try:
-        data = requests.get(f"http://{request.args['addr']}:874/connect", timeout=0.01).json()
+        data = requests.get(f"http://{request.args['addr']}:874/connect", timeout=0.5).json()
         if data['status'] == True:
             connected_teacher = request.args['addr']
         return jsonify(data)
-    except:
+    except Exception as e:
+        print(e)
         return jsonify({'status': 'false'})
 
 @app_.route('/join', methods=["POST", "GET"])
