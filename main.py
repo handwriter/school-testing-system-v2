@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
 
 class Config(object):
     config = {}
+    q_app = None # type: QApplication
     path = ""
 
     def __init__(self, path: str=None):
@@ -67,14 +68,19 @@ class Config(object):
 
     @staticmethod
     def load_config(path: str) -> dict:
+        if not Path(path).exists():
+            with open(path, "w") as wfile:
+                json.dump({}, wfile)
         with open(path, "r") as config_file:
             try:
-                return json.load(config_file)
+                ld = json.load(config_file)
+                if len(ld) != 0:
+                    return ld
             except Exception as e:
-                print(e)
-                with open(path, "w") as err_config_file:
-                    json.dump({}, err_config_file)
-                return {}
+                pass
+            with open(path, "w") as err_config_file:
+                json.dump({}, err_config_file)
+            return {}
 
     def save_config(self) -> bool:
         with open(self.path, "w") as config_file:
@@ -94,6 +100,15 @@ connected_users = []
 user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
+
+
+@app_.route("/close_app")
+def close_app():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false'})
+    user_config.q_app.quit()
+    return "Close"
+
 
 @app_.route('/connect')
 def connect():
@@ -122,6 +137,8 @@ def join():
 
 @app_.route('/find_local_users')
 def find_local_users():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'error'})
     data = []
     for i in range(1, 255):
         try:
@@ -130,7 +147,7 @@ def find_local_users():
         except:
             pass
     user_config["last_scan"] = jsonify(data)
-    return jsonify(data)
+    return jsonify({"users_data": data, "connected_users": connected_users})
 
 
 @app_.route("/")
@@ -138,10 +155,11 @@ def index():
     if request.host.split(':')[0] == request.remote_addr:
         if not user_config.__contains__("username"):
             return redirect("/join")
-        return render_template("index.html", user_config=user_config, connected_users=connected_users)
+        return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0)
     return jsonify({"teacher": user_config["teacher"], "username": user_config["username"]})
 
 app = QApplication(sys.argv)
+user_config.q_app = app
 window = MainWindow(app_)
 window.setWindowFlags(Qt.CustomizeWindowHint)
 window.show()

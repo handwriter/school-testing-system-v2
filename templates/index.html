@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Index</title>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/static/js/main.js"></script>
-    <link href="/static/css/main.css" rel="stylesheet">
-</head>
-<body>
-    <p>Имя: {{ user_config['username'] }}</p>
-    <p>Пользователи в локальной сети:</p>
-    <table class="users-table">
-        <tr>
-            <td>Имя</td>
-            <td>Тип</td>
-            <td>Подключен</td>
-        </tr>
-        <tr>
-            <td>Максим Максимов</td>
-            <td>Ученик</td>
-        </tr>
+{% extends 'base_page.html' %}
 
-    </table>
-    <a id="221" onclick="updateLocalUsersData()">Обновить</a>
-</body>
-</html>
+{% block main_content %}
+<h2 class="center">Пользователи в локальной сети:</h2>
+<table class="wide-table" id="usersTable">
+  <thead>
+    <tr>
+      <th>Имя</th>
+      <th>Тип</th>
+      <th>Подключен</th>
+    </tr>
+  </thead>
+  <tbody id="usersList">
+    <tr>
+        <td>   </td>
+        <td>   </td>
+        <td>   </td>
+    </tr>
+  </tbody>
+</table>
+<h2 class="inactive center" id="usersNotFound">Не найдены...</h2>
+<a onclick="updateLocalUsersData()">Обновить</a>
+{% endblock %}

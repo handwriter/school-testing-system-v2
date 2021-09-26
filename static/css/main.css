@@ -8,9 +8,140 @@
     src: url(/static/fonts/Garet-Heavy.ttf); /* Путь к файлу со шрифтом */
 }
 
+@font-face {
+    font-family: PTSans; /* Гарнитура шрифта */
+    src: url(/static/fonts/PTSansCaption-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
 
 body {
+    display: flex;
+    flex-direction: column;
     background-image: url(/static/img/background.svg);
+}
+
+h2 {
+    font-family: 'PTSans';
+    color: white;
+}
+
+h2.center {
+    text-align: center;
+}
+
+h2.inactive {
+    display: none;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    background-color: #253E5D;
+}
+
+.menu-elem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 158px;
+    height: 79px;
+    align-items: center;
+}
+
+.menu-elem.active {
+    background-color: #21344C;
+    border-bottom: solid 2px #3FA4FF;
+}
+
+.menu-elem svg {
+    width: 23px;
+}
+
+.menu-elem svg path {
+    fill: white;
+}
+
+.menu-elem p {
+    font-family: "Garet-Book";
+    font-size: 9px;
+    color: white;
+    margin: 5px 0px 0px 0px;
+}
+
+.wide-table {
+    width: -webkit-fill-available;
+    border-spacing: 0px;
+}
+
+.loader-blur {
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    background-color: #ffffff47;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-blur img {
+    width: 64px;
+}
+
+.loader-blur.inactive, .loader-blur.inactive img {
+    display:none;
+}
+
+
+tr {
+    font-family: "PTSans";
+}
+
+th, td {
+    border: solid 1px #243B57;
+    padding: 6px;
+    background-color: #1F3650;
+    color: #4D698C;
+}
+
+.main-content {
+    background-color: #1C324A;
+    padding: 22px;
+}
+
+.main-content h2:first-of-type {
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.username {
+    margin: 0px;
+    color: white;
+    font-family: "Garet-Book";
+}
+
+.settings {
+    margin: 0px 10px 0px 10px;
+}
+
+.close {
+    margin-right: 5px;
+    height: 22px;
+}
+
+.settings path, .close svg path {
+    fill: white;
+}
+
+.window-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: #15A4FA;
 }
 
 form {
@@ -94,5 +225,18 @@ input[type="text"]:focus, input[type="text"]:active {
 
 
 .radio input[type="radio"] {
+    display: none;
+}
+
+table tbody tr td:nth-child(3) {
+    display: flex;
+    justify-content: center;
+}
+
+table tbody tr td img {
+    width: 25px;
+}
+
+table.inactive {
     display: none;
 }
