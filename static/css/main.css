@@ -97,6 +97,7 @@ h2.inactive {
 
 tr {
     font-family: "PTSans";
+    text-align: center;
 }
 
 th, td {
@@ -159,10 +160,15 @@ form {
     margin-top: -106.5px;
 }
 
-button[type="submit"] {
+button {
     background-color: #0F92FE;
     color: white;
     font-family: "Garet-Book";
+    border-style: hidden;
+    padding: 6px 25px 6px 25px;
+    border-radius: 20px;
+    outline: none;
+    margin-top: 10px;
 }
 
 form input[type="text"] {
@@ -170,12 +176,8 @@ form input[type="text"] {
 }
 
 form button[type="submit"] {
-    margin-top: 10px;
     font-size: 16px;
-    border-style: hidden;
-    padding: 6px 25px 6px 25px;
     width: fit-content;
-    border-radius: 20px;
 }
 
 form .radio-list {

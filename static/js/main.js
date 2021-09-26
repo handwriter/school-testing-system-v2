@@ -1,3 +1,14 @@
+let user_data = {};
+
+function LoadUserData() {
+    var Handler = function(Request)
+    {
+        user_data = JSON.parse(Request.responseText);
+    };
+
+    SendRequest("GET","/user_data", "", Handler, false);
+}
+
 function CreateRequest()
 {
     var Request = false;
@@ -100,12 +111,17 @@ function updateLocalUsersData() {
     SendRequest("GET","/find_local_users", "", Handler, true);
 }
 
-function getTop(el) {
-  return el.offsetTop + (el.offsetParent && getTop(el.offsetParent));
-}
+// function getTop(el) {
+//   return el.offsetTop + (el.offsetParent && getTop(el.offsetParent));
+// }
+//
+// function getLeft(el) {
+//   return el.offsetLeft + (el.offsetParent && getTop(el.offsetParent));
+// }
 
-function getLeft(el) {
-  return el.offsetLeft + (el.offsetParent && getTop(el.offsetParent));
+function connectToTeacher(addr) {
+
+    SendRequest("GET","/connect_to", "addr="+addr, Handler, true);
 }
 
 
@@ -123,12 +139,19 @@ function addRow(username, teacher, connected_users, ip)
   } else {
       scoreText = document.createTextNode('Ученик');
   }
-  var userStatus = document.createElement('img');
-  if (connected_users.indexOf(ip) >= 0)
-  {
-      userStatus.setAttribute("src", "/static/img/tick.svg");
-  } else {
-      userStatus.setAttribute("src", "/static/img/cross.svg");
+  var userStatus = NaN;
+  if (user_data['teacher']) {
+      userStatus = document.createElement('img');
+      if (connected_users.indexOf(ip) >= 0) {
+          userStatus.setAttribute("src", "/static/img/tick.svg");
+      } else {
+          userStatus.setAttribute("src", "/static/img/cross.svg");
+      }
+  }
+  else {
+      userStatus = document.createElement('a');
+      userStatus.setAttribute("onclick", "connectToTeacher(" + ip + ")")
+      userStatus.innerHTML = "<button>Подключиться</button>"
   }
   statusCell.appendChild(userStatus);
   usernameCell.appendChild(usernameText);

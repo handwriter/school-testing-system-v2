@@ -123,6 +123,14 @@ def connect():
     except:
         return jsonify({'status': 'false'})
 
+@app_.route("/connect_to")
+def connect_to():
+    if not "addr" in request.args:
+        return jsonify({'status': 'false'})
+    try:
+        return requests.get(f"http://{request.args['addr']}:874/", timeout=0.01).json()
+    except:
+        return jsonify({'status': 'false'})
 
 @app_.route('/join', methods=["POST", "GET"])
 def join():
@@ -146,16 +154,23 @@ def find_local_users():
             data.append([f"192.168.1.{i}", r.json()])
         except:
             pass
-    user_config["last_scan"] = jsonify(data)
+    user_config["last_scan"] = data
     return jsonify({"users_data": data, "connected_users": connected_users})
 
+
+@app_.route('/user_data')
+def usr_data():
+    usr = {'connected_users': connected_users}
+    usr.update(user_config.config)
+    if request.host.split(':')[0] == request.remote_addr:
+        return jsonify(usr)
 
 @app_.route("/")
 def index():
     if request.host.split(':')[0] == request.remote_addr:
         if not user_config.__contains__("username"):
             return redirect("/join")
-        return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0)
+        return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0, last_scan=user_config["last_scan"])
     return jsonify({"teacher": user_config["teacher"], "username": user_config["username"]})
 
 app = QApplication(sys.argv)
