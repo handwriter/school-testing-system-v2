@@ -152,10 +152,13 @@ def disconnect():
 
 @app_.route("/disconnect_from")
 def disconnect_from():
+    global connected_teacher
     if request.host.split(':')[0] != request.remote_addr or connected_teacher == '' or user_config["teacher"]:
         return jsonify({'status': 'false'})
     try:
         data = requests.get(f"http://{connected_teacher}:874/disconnect?addr={request.host.split(':')[0]}", timeout=0.5).json()
+        if data['status'] == 'true':
+            connected_teacher = ""
         return data
     except:
         return jsonify({'status': 'false'})
@@ -199,7 +202,7 @@ def index():
     if request.host.split(':')[0] == request.remote_addr:
         if not user_config.__contains__("username"):
             return redirect("/join")
-        return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0, last_scan=user_config["last_scan"])
+        return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0, last_scan=user_config["last_scan"], connected_teacher=connected_teacher)
     return jsonify({"teacher": user_config["teacher"], "username": user_config["username"]})
 
 app = QApplication(sys.argv)

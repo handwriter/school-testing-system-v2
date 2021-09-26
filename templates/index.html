@@ -20,7 +20,15 @@
     <tr>
         <td>{{ data[1]['username'] }}</td>
         <td>{% if data[1]['teacher'] %}Учитель{% else %}Ученик{% endif %}   </td>
+        {% if user_config['teacher'] %}
         <td><img src="/static/img/{% if data[0] in connected_users %}tick{% else %}cross{% endif %}.svg" alt=""></td>
+        {% else %}
+        {% if connected_teacher == '' %}
+         <td><a onclick="connectToTeacher('{{ data[0] }}')"><button>Подключиться</button></a></td>
+        {% elif connected_teacher == data[0] %}
+         <td><a onclick="disconnectFromTeacher()"><button>Отключиться</button></a></td>
+        {% endif %}
+        {% endif %}
     </tr>
     {% endfor %}
     {% endif %}
