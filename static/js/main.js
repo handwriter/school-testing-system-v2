@@ -1,4 +1,45 @@
 let user_data = {};
+let tooltip = {};
+
+function onContextMenu(e){
+    e.preventDefault();
+    // showMenu(e.pageX, e.pageY);
+    // document.addEventListener('mousedown', onMouseDown, false);
+}
+
+function openFile(f_name) {
+    SendRequest("GET","/open_file", "f_name=" + f_name, function() {}, false);
+}
+
+function deleteFile(f_name) {
+    SendRequest("GET","/delete_file", "f_name=" + f_name, function() {location.reload()}, false);
+}
+
+function sendFile(f_name) {
+    SendRequest("GET","/send_file", "f_name=" + f_name, function() {}, false);
+}
+
+function onMouseMove(e) {
+    tooltip.style.left = e.clientX - (tooltip.getBoundingClientRect().width / 2) + 'px';
+    tooltip.style.top = e.clientY - tooltip.getBoundingClientRect().height - 10 + 'px';
+}
+
+function showTooltip(text) {
+    tooltip.classList.remove('inactive');
+    tooltip.innerText = text;
+}
+
+function hideTooltip() {
+    tooltip.classList.add('inactive');
+}
+
+function afterPageLoad() {
+    tooltip = document.querySelector(".tooltip");
+}
+
+document.addEventListener('contextmenu', onContextMenu, false);
+document.addEventListener('mousemove', onMouseMove, false);
+
 
 function LoadUserData() {
     var Handler = function(Request)
@@ -127,6 +168,25 @@ function connectToTeacher(addr) {
 function disconnectFromTeacher() {
 
     SendRequest("GET","/disconnect_from", "", function() {location.reload()}, true);
+}
+
+function SendFile() {
+    let file = document.getElementById('file').files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+
+    // use a regex to remove data url part
+            const base64String = reader.result
+                .replace('data:', '')
+                .replace(/^.+,/, '');
+
+            // log to console
+            // logs wL2dvYWwgbW9yZ...
+            SendRequest("GET","/send_file", "data=" + base64String, function() {location.reload()}, true);
+            console.log(base64String);
+        };
+    reader.readAsDataURL(file);
+
 }
 
 

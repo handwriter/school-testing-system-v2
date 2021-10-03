@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, send_file
 import json
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QApplication
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtGui import QMouseEvent
 import nmap
 import os
 import pythonping
@@ -11,9 +12,11 @@ import base64
 from threading import Thread
 import sys
 import requests
+import subprocess
 
 import socket
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_my_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -22,6 +25,9 @@ def get_my_ip():
     s.close()
     return name
 
+class CustomQWebView(QWebEngineView):
+    def mousePressEvent(self, a0: QMouseEvent) -> None:
+        print(a0.button())
 
 class MainWindow(QMainWindow):
     def __init__(self, f_app: Flask, *args, **kwargs):
@@ -36,7 +42,7 @@ class MainWindow(QMainWindow):
         # self.setCentralWidget(widget)
         # vbox = QVBoxLayout(self)
         self.f_app = f_app
-        self.webEngineView = QWebEngineView()
+        self.webEngineView = CustomQWebView()
         self.setCentralWidget(self.webEngineView)
         self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
         # vbox.addWidget(self.webEngineView)
@@ -138,8 +144,7 @@ def connect_to():
             connected_teacher = request.args['addr']
         return jsonify(data)
     except Exception as e:
-        print(e)
-        return jsonify({'status': 'false'})
+        return jsonify({'status': 'false', 'error': str(e)})
 
 @app_.route("/disconnect")
 def disconnect():
@@ -160,8 +165,8 @@ def disconnect_from():
         if data['status'] == 'true':
             connected_teacher = ""
         return data
-    except:
-        return jsonify({'status': 'false'})
+    except Exception as e:
+        return jsonify({'status': 'false', "error": str(e)})
 
 
 @app_.route('/join', methods=["POST", "GET"])
@@ -178,7 +183,7 @@ def join():
 @app_.route('/find_local_users')
 def find_local_users():
     if request.host.split(':')[0] != request.remote_addr:
-        return jsonify({'status': 'error'})
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
     data = []
     for i in range(1, 255):
         try:
@@ -189,6 +194,17 @@ def find_local_users():
     user_config["last_scan"] = data
     return jsonify({"users_data": data, "connected_users": connected_users})
 
+@app_.route("/get_other_file")
+def get_other_file():
+    if connected_teacher == request.remote_addr:
+        try:
+            file = requests.get(f"http://{request.remote_addr}/get_file?f_name={request.args['f_name']}")
+            open(f'{ROOT_DIR}/SharedFiles/{request.args["f_name"]}', 'wb').write(file.content)
+            subprocess.Popen(f'explorer /select,{request.args["f_name"]}', cwd=ROOT_DIR + "/SharedFiles/")
+            return jsonify({'status': 'true'})
+        except:
+            pass
+    return jsonify({'status': 'false'})
 
 @app_.route('/user_data')
 def usr_data():
@@ -204,6 +220,57 @@ def index():
             return redirect("/join")
         return render_template("index.html", user_config=user_config, connected_users=connected_users, active_item=0, last_scan=user_config["last_scan"], connected_teacher=connected_teacher)
     return jsonify({"teacher": user_config["teacher"], "username": user_config["username"]})
+
+# print(request.files.to_dict())
+@app_.route("/files", methods=["GET", "POST"])
+def files():
+    if request.host.split(':')[0] == request.remote_addr:
+        files = []
+        for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
+            files = i[2]
+            break
+        return render_template("files.html", active_item=1, user_config=user_config, files=files)
+    return jsonify({"status": "false"})
+
+@app_.route('/open_file')
+def open_file():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    try:
+        subprocess.Popen(request.args["f_name"], shell=True, cwd=ROOT_DIR + "/SharedFiles/")
+        return jsonify({'status': 'true'})
+    except:
+        return jsonify({'status': 'false'})
+
+@app_.route("/delete_file")
+def delete_file():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    try:
+        if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
+            raise Exception()
+        os.remove('SharedFiles/' + request.args['f_name'])
+        return jsonify({"status": "true"})
+    except:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+
+@app_.route('/get_file')
+def get_file():
+    try:
+        if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
+            raise Exception()
+        return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
+    except Exception as e:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+
+@app_.route('/send_file')
+def send_file():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    for i in connected_users:
+        requests.get(f"http://{i}/get_other_file?f_name={request.args['f_name']}")
+    return jsonify({'status': 'true'})
+
 
 app = QApplication(sys.argv)
 user_config.q_app = app

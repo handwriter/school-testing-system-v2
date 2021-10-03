@@ -36,6 +36,7 @@ h2.inactive {
 .menu {
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
     background-color: #253E5D;
 }
 
@@ -46,6 +47,10 @@ h2.inactive {
     width: 158px;
     height: 79px;
     align-items: center;
+}
+
+.menu a {
+    text-decoration: none;
 }
 
 .menu-elem.active {
@@ -110,6 +115,7 @@ th, td {
 .main-content {
     background-color: #1C324A;
     padding: 22px;
+    padding-bottom: 100%;
 }
 
 .main-content h2:first-of-type {
@@ -145,7 +151,7 @@ th, td {
     background-color: #15A4FA;
 }
 
-form {
+form.auth-form {
     padding: 27px;
     background: rgb(85,34,195);
     background: linear-gradient(0deg, rgba(85,34,195,1) 0%, rgba(8,67,255,1) 100%);
@@ -171,11 +177,11 @@ button {
     margin-top: 10px;
 }
 
-form input[type="text"] {
+form.auth-form input[type="text"] {
     width: -webkit-fill-available;
 }
 
-form button[type="submit"] {
+form.auth-form button[type="submit"] {
     font-size: 16px;
     width: fit-content;
 }
@@ -186,7 +192,7 @@ form .radio-list {
     width: 100%;
 }
 
-input[type="text"] {
+form.auth-form input[type="text"] {
     border-radius: 25px;
     font-size: 16px;
     padding: 8px 0px 8px 22px;
@@ -194,7 +200,7 @@ input[type="text"] {
     font-family: "Garet-Book";
 }
 
-input[type="text"]:focus, input[type="text"]:active {
+form.auth-form input[type="text"]:focus, form.auth-form input[type="text"]:active {
     outline: none;
 }
 
@@ -245,4 +251,49 @@ tr button {
 
 table.inactive {
     display: none;
+}
+
+.file-list {
+    padding-inline-start: 0px;
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    border: solid 1px #607d8b;
+    border-radius: 5px;
+    padding: 2px 16px 2px 16px;
+    color: #a0a0a0;
+}
+
+.file-list li svg {
+    fill: white;
+    cursor: pointer;
+}
+
+.file-list li svg:first-of-type {
+    margin-left: auto;
+}
+
+.file-list li svg:not(:last-of-type)
+{
+    margin-right: 5px;
+}
+
+.tooltip {
+    position: fixed;
+    border: solid 2px #5a9bbb;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    background: #0a304e;
+    font-family: 'PTSans';
+}
+
+.tooltip.inactive {
+    display: none;
+}
+
+a button {
+    cursor: pointer;
 }
