@@ -268,7 +268,7 @@ def delete_file():
 def upload_file():
     if request.remote_addr != connected_teacher:
         return jsonify({'status': 'false', 'error': "Permission denied"})
-    request.files[0].save("SharedFiles/" + request.files[0].filename)
+    request.files["upload_file"].save("SharedFiles/" + request.files["upload_file"].filename)
     return "Ok"
 
 
