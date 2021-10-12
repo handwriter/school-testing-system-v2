@@ -265,7 +265,7 @@ def delete_file():
 
 @app_.route("/upload_file", methods=["POST"])
 def upload_file():
-    print(request.form)
+    print(request.form["upload_file"])
     return "Ok"
 
 
@@ -276,8 +276,9 @@ def send_file():
     for i in connected_users:
         try:
             # requests.get(f"http://{i}:874/get_other_file?f_name={request.args['f_name']}")
-            requests.post(f"http://{i}:874/upload_file", files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'])})
-        except:
+            requests.post(f"http://{i}:874/upload_file", files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'], "rb")})
+        except Exception as e:
+            print(e)
             continue
     return jsonify({'status': 'true'})
 
