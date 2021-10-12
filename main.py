@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QApplicat
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QMouseEvent
+from typing import List
 import nmap
 import os
 import pythonping
@@ -50,6 +51,7 @@ class MainWindow(QMainWindow):
 
         # self.setLayout(vbox)
         # Thread(target=while_flask_app_loaded, args=[f_app, self.webEngineView]).start()
+
 
 class Config(object):
     config = {}
@@ -104,6 +106,7 @@ class Config(object):
 # print("MMMM")
 app_ = Flask(__name__)
 connected_users = []
+notifies = []
 connected_teacher = ""
 user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
@@ -269,6 +272,7 @@ def upload_file():
     if request.remote_addr != connected_teacher:
         return jsonify({'status': 'false', 'error': "Permission denied"})
     request.files["upload_file"].save("SharedFiles/" + request.files["upload_file"].filename)
+    notifies.append(request.files["upload_file"].filename)
     return "Ok"
 
 
@@ -287,6 +291,14 @@ def send_file():
             print(e)
             continue
     return jsonify({'status': 'true'})
+
+@app_.route('/notifies')
+def notifications():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    dt = list().extend(notifies)
+    notifies.clear()
+    return jsonify({'status': 'true', 'notifies': dt[-1]})
 
 
 app = QApplication(sys.argv)

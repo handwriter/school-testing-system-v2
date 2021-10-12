@@ -1,6 +1,21 @@
 let user_data = {};
 let tooltip = {};
 
+function timeoutNotifies() {
+    var Handler = function(Request)
+    {
+        nt = JSON.parse(Request.responseText);
+        if (nt["status"] == "true")
+        {
+            console.log("Got file")
+        }
+    };
+    SendRequest("GET", "/notifies", "", Handler, false);
+    setTimeout(timeoutNotifies, 2000);
+}
+
+let updateNotfies = setTimeout(timeoutNotifies, 2000);
+
 function onContextMenu(e){
     e.preventDefault();
     // showMenu(e.pageX, e.pageY);
