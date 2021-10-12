@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify, send_file
+from werkzeug.datastructures import FileStorage
 import json
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QApplication
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
@@ -265,7 +266,10 @@ def delete_file():
 
 @app_.route("/upload_file", methods=["POST"])
 def upload_file():
-    print(request.form["upload_file"])
+    if request.remote_addr != connected_teacher:
+        return jsonify({'status': 'false', 'error': "Permission denied"})
+    for i in request.files:
+        i.save("SharedFiles/" + i.filename)
     return "Ok"
 
 
@@ -273,10 +277,13 @@ def upload_file():
 def send_file():
     if request.host.split(':')[0] != request.remote_addr:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
+    requests.post(f"http://{request.host}/upload_file",
+                  files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'], "rb")})
     for i in connected_users:
         try:
             # requests.get(f"http://{i}:874/get_other_file?f_name={request.args['f_name']}")
-            requests.post(f"http://{i}:874/upload_file", files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'], "rb")})
+            # requests.post(f"http://{i}:874/upload_file", files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'], "rb")})
+            pass
         except Exception as e:
             print(e)
             continue
