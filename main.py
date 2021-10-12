@@ -254,21 +254,31 @@ def delete_file():
     except:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
 
-@app_.route('/get_file')
-def get_file():
-    try:
-        if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
-            raise Exception()
-        return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
-    except Exception as e:
-        return jsonify({'status': 'false', 'error': 'Permission denied'})
+# @app_.route('/get_file')
+# def get_file():
+#     try:
+#         if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
+#             raise Exception()
+#         return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
+#     except Exception as e:
+#         return jsonify({'status': 'false', 'error': 'Permission denied'})
+
+@app_.route("/upload_file", methods=["POST"])
+def upload_file():
+    print(request.form)
+    return "Ok"
+
 
 @app_.route('/send_file')
 def send_file():
     if request.host.split(':')[0] != request.remote_addr:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
     for i in connected_users:
-        requests.get(f"http://{i}/get_other_file?f_name={request.args['f_name']}")
+        try:
+            # requests.get(f"http://{i}:874/get_other_file?f_name={request.args['f_name']}")
+            requests.post(f"http://{i}:874/upload_file", files={"upload_file": open(ROOT_DIR + "/SharedFiles/" + request.args['f_name'])})
+        except:
+            continue
     return jsonify({'status': 'true'})
 
 
