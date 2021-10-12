@@ -296,9 +296,12 @@ def send_file():
 def notifications():
     if request.host.split(':')[0] != request.remote_addr:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
-    dt = list().extend(notifies)
-    notifies.clear()
-    return jsonify({'status': 'true', 'notifies': dt[-1]})
+    try:
+        dt = list().extend(notifies)
+        notifies.clear()
+        return jsonify({'status': 'true', 'notifies': dt[-1]})
+    except:
+        return jsonify({'status': 'false'})
 
 
 app = QApplication(sys.argv)
