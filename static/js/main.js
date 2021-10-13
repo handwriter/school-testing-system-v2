@@ -1,5 +1,6 @@
 let user_data = {};
 let tooltip = {};
+let message = {};
 
 function timeoutNotifies() {
     var Handler = function(Request)
@@ -7,7 +8,7 @@ function timeoutNotifies() {
         nt = JSON.parse(Request.responseText);
         if (nt["status"] == "true")
         {
-            console.log("Got file")
+            ShowMessage("Получен файл: " + nt["notify"]);
         }
     };
     SendRequest("GET", "/notifies", "", Handler, false);
@@ -50,7 +51,21 @@ function hideTooltip() {
 
 function afterPageLoad() {
     tooltip = document.querySelector(".tooltip");
+    message = document.querySelector(".notification");
 }
+
+function ShowMessage(msg)
+{
+    message.classList.remove('inactive');
+    message.innerText = msg;
+}
+
+function hideMessage()
+{
+    message.classList.add("inactive");
+}
+
+
 
 document.addEventListener('contextmenu', onContextMenu, false);
 document.addEventListener('mousemove', onMouseMove, false);

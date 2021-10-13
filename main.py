@@ -297,9 +297,11 @@ def notifications():
     if request.host.split(':')[0] != request.remote_addr:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
     try:
+        print(notifies)
         dt = list().extend(notifies)
+        print(dt)
         notifies.clear()
-        return jsonify({'status': 'true', 'notifies': dt[-1]})
+        return jsonify({'status': 'true', 'notify': dt[-1]})
     except:
         return jsonify({'status': 'false'})
 
