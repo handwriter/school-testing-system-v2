@@ -18,6 +18,7 @@
 </div>
 <ul class="file-list">
     {% if not user_config["teacher"] and other_data.__len__() > 0 %}
+    {% for file in other_data %}
         <li>
             {{ file }}
             <a href="http://{{ connected_teacher }}:874/get_file?f_name={{ file }}">
@@ -26,6 +27,7 @@
             </svg>
             </a>
         </li>
+    {% endfor %}
     {% else %}
     {% for file in files %}
         <li>

@@ -232,6 +232,7 @@ def files():
     for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
         files = i[2]
         break
+    print(files)
     if request.host.split(':')[0] == request.remote_addr:
         other_data = []
         if connected_teacher != '':
