@@ -246,6 +246,18 @@ def open_file():
     except:
         return jsonify({'status': 'false'})
 
+@app_.route('/select_file')
+def select_file():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    try:
+        subprocess.Popen(f'explorer /select,{request.args["f_name"]}', cwd=ROOT_DIR + "/SharedFiles/")
+        return jsonify({'status': 'true'})
+    except:
+        return jsonify({'status': 'false'})
+
+
+
 @app_.route("/delete_file")
 def delete_file():
     if request.host.split(':')[0] != request.remote_addr:
@@ -294,15 +306,14 @@ def send_file():
 
 @app_.route('/notifies')
 def notifications():
-    if request.host.split(':')[0] != request.remote_addr:
+    if request.host.split(':')[0] != request.remote_addr or len(notifies) == 0:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
     try:
         print(notifies)
-        dt = list().extend(notifies)
-        print(dt)
+        dt = notifies.copy()
         notifies.clear()
         return jsonify({'status': 'true', 'notify': dt[-1]})
-    except:
+    except Exception as e:
         return jsonify({'status': 'false'})
 
 

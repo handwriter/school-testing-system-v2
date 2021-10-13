@@ -76,6 +76,10 @@ h2.inactive {
 .wide-table {
     width: -webkit-fill-available;
     border-spacing: 0px;
+    display: inline-block;
+    max-height: 90%;
+    overflow-y: auto;
+    padding-right: 7px;
 }
 
 .loader-blur {
@@ -112,10 +116,15 @@ th, td {
     color: #4D698C;
 }
 
+th:not(:nth-of-type(1)) {
+    width: 100%;
+}
+
 .main-content {
     background-color: #1C324A;
     padding: 22px;
-    padding-bottom: 100%;
+    padding-bottom: 175px;
+    height: inherit;
 }
 
 .main-content h2:first-of-type {
@@ -255,6 +264,31 @@ table.inactive {
 
 .file-list {
     padding-inline-start: 0px;
+    scrollbar-width: var(--scrollbarWidth);
+    scrollbar-color: var(--scrollbarThumb) var(--scrollbarBg);
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+:root {
+  --scrollbarBg: rgba(63, 81, 181, 1);
+  --scrollbarThumb: rgba(255, 255, 255, 0.8);
+  --scrollbarWidth: 12px;
+  --scrollbarBorder: 3px solid var(--scrollbarBg);
+  --scrollbarBorderRadius: calc(var(--scrollbarWidth) / 2);
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbarWidth);
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbarBg);
+  border-radius: var(--scrollbarBorderRadius);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbarThumb);
+  border-radius: var(--scrollbarBorderRadius);
+  border: var(--scrollbarBorder);
 }
 
 .file-list li {
@@ -264,6 +298,7 @@ table.inactive {
     border-radius: 5px;
     padding: 2px 16px 2px 16px;
     color: #a0a0a0;
+    margin-right: 10px;
 }
 
 .file-list li svg {
@@ -319,6 +354,10 @@ a button {
 
 .buttons-block {
     display: flex;
+}
+
+button.inactive {
+    display: none;
 }
 
 button.green {

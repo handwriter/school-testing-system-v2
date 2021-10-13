@@ -8,14 +8,14 @@ function timeoutNotifies() {
         nt = JSON.parse(Request.responseText);
         if (nt["status"] == "true")
         {
-            ShowMessage("Получен файл: " + nt["notify"]);
+            a = nt;
+            ShowMessage("Получен файл: " + a["notify"], function() {hideMessage();openFile(a["notify"]);},
+                function() {hideMessage();selectFile(a["notify"]);});
         }
     };
     SendRequest("GET", "/notifies", "", Handler, false);
     setTimeout(timeoutNotifies, 2000);
 }
-
-let updateNotfies = setTimeout(timeoutNotifies, 2000);
 
 function onContextMenu(e){
     e.preventDefault();
@@ -26,6 +26,12 @@ function onContextMenu(e){
 function openFile(f_name) {
     SendRequest("GET","/open_file", "f_name=" + f_name, function() {}, false);
 }
+
+function selectFile(f_name) {
+    SendRequest("GET","/select_file", "f_name=" + f_name, function() {}, false);
+}
+
+
 
 function deleteFile(f_name) {
     SendRequest("GET","/delete_file", "f_name=" + f_name, function() {location.reload()}, false);
@@ -52,16 +58,36 @@ function hideTooltip() {
 function afterPageLoad() {
     tooltip = document.querySelector(".tooltip");
     message = document.querySelector(".notification");
+    let updateNotfies = setTimeout(timeoutNotifies, 2000);
 }
 
-function ShowMessage(msg)
+function ShowMessage(msg, open= false, open_in_explorer = false)
 {
+    if (open != false)
+    {
+        message.children[1].children[0].classList.remove("inactive");
+        message.children[1].children[0].onclick = open;
+    }
+    else
+    {
+        message.children[1].children[0].classList.add("inactive");
+    }
+    if (open_in_explorer != false)
+    {
+        message.children[1].children[1].classList.remove("inactive");
+        message.children[1].children[1].onclick = open_in_explorer;
+    }
+    else
+    {
+        message.children[1].children[1].classList.add("inactive");
+    }
+    message.children[0].innerText = msg;
     message.classList.remove('inactive');
-    message.innerText = msg;
 }
 
 function hideMessage()
 {
+    console.log("hidemes");
     message.classList.add("inactive");
 }
 

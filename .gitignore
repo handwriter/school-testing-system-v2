@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 .idea
 .idea/
+.SharedFiles/
 config.json
