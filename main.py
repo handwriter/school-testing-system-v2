@@ -283,7 +283,7 @@ def get_file():
     try:
         if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
             raise Exception()
-        return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}")
+        return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
     except Exception as e:
         print(e)
         return jsonify({'status': 'false', 'error': 'Permission denied'})
@@ -298,7 +298,7 @@ def upload_file():
 
 
 @app_.route('/send_file')
-def send_file():
+def sends_file():
     if request.host.split(':')[0] != request.remote_addr:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
     # requests.post(f"http://{request.host}/upload_file",
