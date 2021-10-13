@@ -277,14 +277,14 @@ def delete_file():
     except:
         return jsonify({'status': 'false', 'error': 'Permission denied'})
 
-# @app_.route('/get_file')
-# def get_file():
-#     try:
-#         if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
-#             raise Exception()
-#         return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
-#     except Exception as e:
-#         return jsonify({'status': 'false', 'error': 'Permission denied'})
+@app_.route('/get_file')
+def get_file():
+    try:
+        if '..' in Path(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}").parts:
+            raise Exception()
+        return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
+    except Exception as e:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
 
 @app_.route("/upload_file", methods=["POST"])
 def upload_file():

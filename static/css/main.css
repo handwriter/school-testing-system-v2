@@ -301,16 +301,16 @@ table.inactive {
     margin-right: 10px;
 }
 
-.file-list li svg {
+.file-list li svg, .file-list li a svg {
     fill: white;
     cursor: pointer;
 }
 
-.file-list li svg:first-of-type {
+.file-list li svg:first-of-type, .file-list li a svg:first-of-type {
     margin-left: auto;
 }
 
-.file-list li svg:not(:last-of-type)
+.file-list li svg:not(:last-of-type), .file-list li a svg:not(:last-of-type)
 {
     margin-right: 5px;
 }
