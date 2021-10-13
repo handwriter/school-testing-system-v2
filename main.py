@@ -228,12 +228,19 @@ def index():
 # print(request.files.to_dict())
 @app_.route("/files", methods=["GET", "POST"])
 def files():
+    files = []
+    for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
+        files = i[2]
+        break
     if request.host.split(':')[0] == request.remote_addr:
-        files = []
-        for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
-            files = i[2]
-            break
-        return render_template("files.html", active_item=1, user_config=user_config, files=files)
+        other_data = []
+        if connected_teacher != '':
+            a = requests.get(f"http://{connected_teacher}:874/files").json()
+            if a['status'] == 'true':
+                other_data = a['files']
+        return render_template("files.html", active_item=1, user_config=user_config, files=files, other_data=other_data, connected_teacher=connected_teacher)
+    elif user_config["teacher"] and request.remote_addr in connected_users:
+        return jsonify({'status': 'true', 'files': files})
     return jsonify({"status": "false"})
 
 @app_.route('/open_file')
