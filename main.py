@@ -284,6 +284,7 @@ def get_file():
             raise Exception()
         return send_file(f"{ROOT_DIR}/SharedFiles/{request.args['f_name']}", download_name=request.args['f_name'])
     except Exception as e:
+        print(e)
         return jsonify({'status': 'false', 'error': 'Permission denied'})
 
 @app_.route("/upload_file", methods=["POST"])
