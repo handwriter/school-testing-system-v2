@@ -48,7 +48,8 @@ class MainWindow(QMainWindow):
         self.f_app = f_app
         self.webEngineView = CustomQWebView()
         self.setCentralWidget(self.webEngineView)
-        self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
+        self.webEngineView.setHtml("Loading...")
+        # self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
         # vbox.addWidget(self.webEngineView)
 
         # self.setLayout(vbox)
@@ -338,8 +339,8 @@ class PrintB(Thread):
     def run(self):
         with user_config.f_app.test_request_context():
             while self.running:
-                print(request.host_url)
                 time.sleep(2)
+                # user_config.q_window.setWindowOpacity(1)
     def stop(self):
         self.running = False
 
@@ -352,6 +353,5 @@ window.setWindowFlags(Qt.FramelessWindowHint | Qt.CustomizeWindowHint)
 window.show()
 # kwargs = {'': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 # awaitFlaskThread = Thread(target=awaitStartFlask, daemon=True).start()
-PrintB().start()
-
+# PrintB().start()
 app.exec_()
