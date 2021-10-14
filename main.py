@@ -21,6 +21,7 @@ import socket
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+loading_template = open("templates/empty_loading.html").readlines()[0]
 
 def get_my_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -48,7 +49,7 @@ class MainWindow(QMainWindow):
         self.f_app = f_app
         self.webEngineView = CustomQWebView()
         self.setCentralWidget(self.webEngineView)
-        self.webEngineView.setHtml("Loading...")
+        self.webEngineView.setHtml(loading_template)
         # self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
         # vbox.addWidget(self.webEngineView)
 
