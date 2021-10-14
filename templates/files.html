@@ -16,6 +16,11 @@
 <div class="title-block">
     <h2>Общедоступные файлы {% if not user_config["teacher"] and other_data.__len__() > 0 %}учителя{% endif %}</h2>
 </div>
+{#<label class="switch">#}
+{#<input type="checkbox" checked>#}
+{#<span class="slider round"></span>#}
+{#</label>#}
+
 <ul class="file-list">
     {% if not user_config["teacher"] and other_data.__len__() > 0 %}
     {% for file in other_data %}

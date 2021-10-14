@@ -20,6 +20,7 @@ import socket
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 def get_my_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -56,6 +57,7 @@ class MainWindow(QMainWindow):
 class Config(object):
     config = {}
     q_app = None # type: QApplication
+    q_window = None # type: QMainWindow
     path = ""
 
     def __init__(self, path: str=None):
@@ -325,10 +327,16 @@ def notifications():
     except Exception as e:
         return jsonify({'status': 'false'})
 
+def awaitStartFlask():
+    user_config.q_window.setWindowOpacity(1)
+
 
 app = QApplication(sys.argv)
 user_config.q_app = app
 window = MainWindow(app_)
-window.setWindowFlags(Qt.CustomizeWindowHint)
+user_config.q_window = window
+window.setWindowFlags(Qt.FramelessWindowHint | Qt.CustomizeWindowHint)
+window.setWindowOpacity(0)
 window.show()
+app_.before_first_request(awaitStartFlask)
 app.exec_()
