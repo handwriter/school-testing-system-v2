@@ -14,6 +14,7 @@ import base64
 from threading import Thread
 import sys
 import requests
+import time
 import subprocess
 
 import socket
@@ -58,6 +59,7 @@ class Config(object):
     config = {}
     q_app = None # type: QApplication
     q_window = None # type: QMainWindow
+    f_app = None # type: Flask
     path = ""
 
     def __init__(self, path: str=None):
@@ -112,6 +114,7 @@ notifies = []
 connected_teacher = ""
 user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
+user_config.f_app = app_
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
 
 
@@ -327,16 +330,28 @@ def notifications():
     except Exception as e:
         return jsonify({'status': 'false'})
 
-def awaitStartFlask():
-    user_config.q_window.setWindowOpacity(1)
 
+class PrintB(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.running = True
+    def run(self):
+        with user_config.f_app.test_request_context():
+            while self.running:
+                print(request.host_url)
+                time.sleep(2)
+    def stop(self):
+        self.running = False
 
 app = QApplication(sys.argv)
 user_config.q_app = app
 window = MainWindow(app_)
 user_config.q_window = window
 window.setWindowFlags(Qt.FramelessWindowHint | Qt.CustomizeWindowHint)
-window.setWindowOpacity(0)
+# window.setWindowOpacity(0)
 window.show()
-app_.before_first_request(awaitStartFlask)
+# kwargs = {'': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
+# awaitFlaskThread = Thread(target=awaitStartFlask, daemon=True).start()
+PrintB().start()
+
 app.exec_()
