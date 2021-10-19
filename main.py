@@ -16,17 +16,25 @@ import sys
 import requests
 import time
 import subprocess
-
+from contextlib import contextmanager
 import socket
 
-import socket
+@contextmanager
+def socketcontext(*args, **kw):
+    s = socket.socket(*args, **kw)
+    try:
+        yield s
+    finally:
+        s.close()
 
 
-# Function to display hostname and
-# IP address
+def get_my_ip():
+    with socketcontext(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-IP = socket.gethostbyname(socket.gethostname())
+IP = get_my_ip()
 
 class CustomQWebView(QWebEngineView):
     def mousePressEvent(self, a0: QMouseEvent) -> None:
