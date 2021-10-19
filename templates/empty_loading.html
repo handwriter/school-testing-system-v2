@@ -9,14 +9,11 @@
             var xhr = new XMLHttpRequest();
 // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
             xhr.open('GET', '{{ ip }}status.png', false);
+            xhr.onreadystatechange = function() {location.replace("{{ ip }}")};
 
             // 3. Отсылаем запрос
             try {
                 xhr.send();
-                if (xhr.status == 200) {
-                    console.log(typeof xhr.status);
-                    location.replace("{{ ip }}")
-                }
             }
             catch (e) {
                 setTimeout(checkReq, 1000);
