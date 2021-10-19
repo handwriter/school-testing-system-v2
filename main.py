@@ -16,6 +16,7 @@ import sys
 import requests
 import time
 import subprocess
+from flask_cors import CORS
 from contextlib import contextmanager
 import socket
 
@@ -26,7 +27,6 @@ def socketcontext(*args, **kw):
         yield s
     finally:
         s.close()
-
 
 def get_my_ip():
     with socketcontext(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -118,6 +118,7 @@ class Config(object):
 # app.run("0.0.0.0", port=874)
 # print("MMMM")
 app_ = Flask(__name__)
+CORS(app_)
 connected_users = []
 notifies = []
 connected_teacher = ""
@@ -125,6 +126,17 @@ user_config = Config("config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 user_config.f_app = app_
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
+
+
+@app_.route("/status.png")
+def status():
+    return send_file( open('static/img/status.png', 'rb'), mimetype="image/png")
+
+# @app_.route("/empty_loading")
+# def empty_loading():
+#     print(f"http://{IP}:874/")
+#     return render_template("empty_loading.html", ip=f"http://{IP}:874/")
+
 
 
 @app_.route("/close_app")
