@@ -17,6 +17,9 @@ function timeoutNotifies() {
     setTimeout(timeoutNotifies, 2000);
 }
 
+
+
+
 function onContextMenu(e){
     e.preventDefault();
     // showMenu(e.pageX, e.pageY);

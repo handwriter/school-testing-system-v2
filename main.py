@@ -19,16 +19,14 @@ import subprocess
 
 import socket
 
+import socket
+
+
+# Function to display hostname and
+# IP address
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-loading_template = open("templates/empty_loading.html").readlines()[0]
-
-def get_my_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    name = s.getsockname()[0]
-    s.close()
-    return name
+IP = socket.gethostbyname(socket.gethostname())
 
 class CustomQWebView(QWebEngineView):
     def mousePressEvent(self, a0: QMouseEvent) -> None:
@@ -49,7 +47,8 @@ class MainWindow(QMainWindow):
         self.f_app = f_app
         self.webEngineView = CustomQWebView()
         self.setCentralWidget(self.webEngineView)
-        self.webEngineView.setHtml(loading_template)
+        with f_app.test_request_context("/"):
+            self.webEngineView.setHtml(render_template("empty_loading.html", ip=f"http://{IP}:874/"))
         # self.webEngineView.load(QUrl(f"http://{get_my_ip()}:874/"))
         # vbox.addWidget(self.webEngineView)
 
@@ -341,7 +340,8 @@ class PrintB(Thread):
         with user_config.f_app.test_request_context():
             while self.running:
                 time.sleep(2)
-                # user_config.q_window.setWindowOpacity(1)
+                user_config.q_window.webEngineView.load(QUrl(f"http://{IP}:874/"))
+                self.stop()
     def stop(self):
         self.running = False
 
@@ -349,7 +349,8 @@ app = QApplication(sys.argv)
 user_config.q_app = app
 window = MainWindow(app_)
 user_config.q_window = window
-window.setWindowFlags(Qt.FramelessWindowHint | Qt.CustomizeWindowHint)
+window.setWindowFlags(Qt.CustomizeWindowHint)
+# window.setWindowFlags(Qt.FramelessWindowHint | Qt.CustomizeWindowHint)
 # window.setWindowOpacity(0)
 window.show()
 # kwargs = {'': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
