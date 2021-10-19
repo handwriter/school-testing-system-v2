@@ -11,16 +11,20 @@
             xhr.open('GET', '{{ ip }}status.png', false);
 
             // 3. Отсылаем запрос
-            xhr.send();
-            if (xhr.status == 200)
-            {
-                console.log(typeof xhr.status);
-                location.replace("{{ ip }}")
+            try {
+                xhr.send();
+                if (xhr.status == 200) {
+                    console.log(typeof xhr.status);
+                    location.replace("{{ ip }}")
+                }
             }
-            setTimeout(checkReq, 1000);
+            catch (e) {
+                setTimeout(checkReq, 1000);
+            }
+
 
         }
-        checkReq();
+        setTimeout(checkReq, 1000);
         // 3. Отсылаем запрос
 
 
