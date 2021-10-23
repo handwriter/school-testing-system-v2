@@ -1,0 +1,430 @@
+@font-face {
+    font-family: Garet-Book; /* Гарнитура шрифта */
+    src: url(/static/fonts/Garet-Book.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Garet-Heavy; /* Гарнитура шрифта */
+    src: url(/static/fonts/Garet-Heavy.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: PTSans; /* Гарнитура шрифта */
+    src: url(/static/fonts/PTSansCaption-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-image: url(/static/img/background.svg);
+}
+
+h2 {
+    font-family: 'PTSans';
+    color: white;
+}
+
+h2.center {
+    text-align: center;
+}
+
+h2.inactive {
+    display: none;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: #253E5D;
+}
+
+.menu-elem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 158px;
+    height: 79px;
+    align-items: center;
+}
+
+.menu a {
+    text-decoration: none;
+}
+
+.menu a:hover {
+    background-color: #21344c80;
+}
+
+.menu-elem.active {
+    background-color: #21344C;
+    border-bottom: solid 2px #3FA4FF;
+}
+
+.menu-elem svg {
+    width: 23px;
+}
+
+.menu-elem svg path {
+    fill: white;
+}
+
+.menu-elem p {
+    font-family: "Garet-Book";
+    font-size: 9px;
+    color: white;
+    margin: 5px 0px 0px 0px;
+}
+
+.wide-table {
+    width: -webkit-fill-available;
+    border-spacing: 0px;
+    display: inline-block;
+    max-height: 90%;
+    overflow-y: auto;
+    padding-right: 7px;
+}
+
+.loader-blur {
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    background-color: #ffffff47;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-blur img {
+    width: 64px;
+}
+
+.loader-blur.inactive, .loader-blur.inactive img {
+    display:none;
+}
+
+
+tr {
+    font-family: "PTSans";
+    text-align: center;
+}
+
+th, td {
+    border: solid 1px #243B57;
+    padding: 6px;
+    background-color: #1F3650;
+    color: #4D698C;
+}
+
+th:not(:nth-of-type(1)) {
+    width: 100%;
+}
+
+.main-content {
+    background-color: #1C324A;
+    padding: 22px;
+    padding-bottom: 175px;
+    height: inherit;
+}
+
+.main-content h2:first-of-type {
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.username {
+    margin: 0px;
+    color: white;
+    font-family: "Garet-Book";
+}
+
+.settings {
+    margin: 0px 10px 0px 10px;
+}
+
+.close {
+    margin-right: 5px;
+    height: 22px;
+}
+
+.settings path, .close svg path {
+    fill: white;
+}
+
+.window-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: #15A4FA;
+}
+
+form.auth-form {
+    padding: 27px;
+    background: rgb(85,34,195);
+    background: linear-gradient(0deg, rgba(85,34,195,1) 0%, rgba(8,67,255,1) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    margin-left: -152px;
+    margin-top: -106.5px;
+}
+
+button {
+    background-color: #0F92FE;
+    color: white;
+    font-family: "Garet-Book";
+    border-style: hidden;
+    padding: 6px 25px 6px 25px;
+    border-radius: 20px;
+    outline: none;
+    margin-top: 10px;
+}
+
+form.auth-form input[type="text"] {
+    width: -webkit-fill-available;
+}
+
+form.auth-form button[type="submit"] {
+    font-size: 16px;
+    width: fit-content;
+}
+
+form .radio-list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+form.auth-form input[type="text"] {
+    border-radius: 25px;
+    font-size: 16px;
+    padding: 8px 0px 8px 22px;
+    border-style: hidden;
+    font-family: "Garet-Book";
+}
+
+form.auth-form input[type="text"]:focus, form.auth-form input[type="text"]:active {
+    outline: none;
+}
+
+.radio {
+    display: flex;
+}
+
+.radio-list .radio:first-of-type label {
+    border-radius: 9px 9px 0px 0px;
+}
+
+.radio-list .radio:last-of-type label {
+    border-radius: 0px 0px 9px 9px;
+}
+
+
+
+.radio label {
+    font-family: "Garet-Heavy";
+    background-color: #04082C;
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 9px;
+}
+
+.radio input[type="radio"]:checked+label {
+    background-color: #0F92FE;
+}
+
+
+.radio input[type="radio"] {
+    display: none;
+}
+
+table tbody tr td:nth-child(3):not(:empty) {
+    display: flex;
+    justify-content: center;
+}
+
+table tbody tr td img {
+    width: 25px;
+}
+
+tr button {
+    margin: 0px;
+}
+
+table.inactive {
+    display: none;
+}
+
+.file-list {
+    padding-inline-start: 0px;
+    scrollbar-width: var(--scrollbarWidth);
+    scrollbar-color: var(--scrollbarThumb) var(--scrollbarBg);
+    max-height: 100%;
+    overflow-y: auto;
+    max-height: 55vh;
+}
+
+:root {
+  --scrollbarBg: rgba(63, 81, 181, 1);
+  --scrollbarThumb: rgba(255, 255, 255, 0.8);
+  --scrollbarWidth: 12px;
+  --scrollbarBorder: 3px solid var(--scrollbarBg);
+  --scrollbarBorderRadius: calc(var(--scrollbarWidth) / 2);
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbarWidth);
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbarBg);
+  border-radius: var(--scrollbarBorderRadius);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbarThumb);
+  border-radius: var(--scrollbarBorderRadius);
+  border: var(--scrollbarBorder);
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    border: solid 1px #607d8b;
+    border-radius: 5px;
+    padding: 2px 16px 2px 16px;
+    color: #a0a0a0;
+    margin-right: 10px;
+}
+
+.file-list li svg, .file-list li a svg {
+    fill: white;
+    cursor: pointer;
+}
+
+.file-list li svg:first-of-type, .file-list li a svg:first-of-type {
+    margin-left: auto;
+}
+
+.file-list li svg:not(:last-of-type), .file-list li a svg:not(:last-of-type)
+{
+    margin-right: 5px;
+}
+
+.tooltip {
+    position: fixed;
+    border: solid 2px #5a9bbb;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    background: #0a304e;
+    font-family: 'PTSans';
+}
+
+.tooltip.inactive {
+    display: none;
+}
+
+a button {
+    cursor: pointer;
+}
+
+.notification {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #000000bf;
+    color: white;
+    font-family: 'Garet-Book';
+}
+
+.notification.inactive {
+    display: none;
+}
+
+.buttons-block {
+    display: flex;
+}
+
+button.inactive {
+    display: none;
+}
+
+button.green {
+    background-color: #00e265;
+}
+
+.buttons-block a {
+    margin: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

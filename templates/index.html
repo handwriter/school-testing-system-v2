@@ -1,0 +1,41 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block main_content %}
+<h2 class="center">Пользователи в локальной сети:</h2>
+<table class="wide-table {% if not last_scan %}inactive{% endif %}" id="usersTable">
+  <thead>
+    <tr>
+      <th>Имя</th>
+      <th>Тип</th>
+      <th>Подключен</th>
+    </tr>
+  </thead>
+  <tbody id="usersList">
+    {% if last_scan %}
+    {% for data in last_scan %}
+    <tr>
+        <td>{{ data[1]['username'] }}</td>
+        <td>{% if data[1]['teacher'] %}Учитель{% else %}Ученик{% endif %}   </td>
+        {% if user_config['teacher'] %}
+        <td><img src="/static/img/{% if data[0] in connected_users %}tick{% else %}cross{% endif %}.svg" alt=""></td>
+        {% else %}
+        {% if connected_teacher == '' %}
+         <td><a onclick="connectToTeacher('{{ data[0] }}')"><button>Подключиться</button></a></td>
+        {% elif connected_teacher == data[0] %}
+         <td><a onclick="disconnectFromTeacher()"><button>Отключиться</button></a></td>
+        {% endif %}
+        {% endif %}
+    </tr>
+
+    {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+<h2 class="{% if last_scan %}inactive{% endif %} center" id="usersNotFound">Не найдены...</h2>
+
+<a onclick="updateLocalUsersData()"><button>Обновить</button></a>
+{% endblock %}
