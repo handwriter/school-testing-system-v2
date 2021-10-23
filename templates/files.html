@@ -33,6 +33,8 @@
             </a>
         </li>
     {% endfor %}
+    {% elif not user_config["teacher"] %}
+        <h2>Не подключен к учителю...</h2>
     {% else %}
     {% for file in files %}
         <li>

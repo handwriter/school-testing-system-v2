@@ -53,6 +53,10 @@ h2.inactive {
     text-decoration: none;
 }
 
+.menu a:hover {
+    background-color: #21344c80;
+}
+
 .menu-elem.active {
     background-color: #21344C;
     border-bottom: solid 2px #3FA4FF;
