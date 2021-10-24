@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, redirect, jsonify, send_file
 import json
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QMouseEvent, QIcon
 import os
 from pathlib import Path
 from threading import Thread
@@ -32,7 +32,8 @@ def get_my_ip():
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 IP = get_my_ip()
-
+if not Path("SharedFiles/").exists():
+    os.mkdir("SharedFiles/")
 
 class CustomQWebView(QWebEngineView):
     def mousePressEvent(self, a0: QMouseEvent) -> None:
@@ -45,6 +46,15 @@ class MainWindow(QMainWindow):
         self.f_app = f_app
         self.webEngineView = CustomQWebView()
         self.setCentralWidget(self.webEngineView)
+        app_icon = QIcon()
+        app_icon.addFile('16.png', QSize(16, 16))
+        app_icon.addFile('32.png', QSize(32, 32))
+        app_icon.addFile('48.png', QSize(48, 48))
+        app_icon.addFile('48.png', QSize(64, 64))
+        app_icon.addFile('256.png', QSize(256, 256))
+        app_icon.addFile('512.png', QSize(512, 512))
+        app_icon.addFile('1024.png', QSize(1024, 1024))
+        app.setWindowIcon(app_icon)
         with f_app.test_request_context("/"):
             self.webEngineView.setHtml(render_template("empty_loading.html", ip=f"http://{IP}:874/"))
 
@@ -344,6 +354,6 @@ app = QApplication(sys.argv)
 user_config.q_app = app
 window = MainWindow(app_)
 user_config.q_window = window
-window.setWindowFlags(Qt.CustomizeWindowHint)
+# window.setWindowFlags(Qt.CustomizeWindowHint)
 window.show()
 app.exec_()

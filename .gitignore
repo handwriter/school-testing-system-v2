@@ -13,6 +13,8 @@ develop-eggs/
 dist/
 SharedFiles/
 SharedFiles
+output/
+output
 downloads/
 eggs/
 .eggs/
