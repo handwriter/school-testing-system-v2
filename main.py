@@ -30,10 +30,12 @@ def get_my_ip():
         return s.getsockname()[0]
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.expanduser('~/Documents/SchoolTestSystem/')
+if not Path(ROOT_DIR).exists():
+    Path(ROOT_DIR).mkdir()
 IP = get_my_ip()
-if not Path("SharedFiles/").exists():
-    os.mkdir("SharedFiles/")
+if not Path(ROOT_DIR + "/SharedFiles/").exists():
+    Path(ROOT_DIR + "/SharedFiles/").mkdir()
 
 class CustomQWebView(QWebEngineView):
     def mousePressEvent(self, a0: QMouseEvent) -> None:
@@ -113,7 +115,7 @@ CORS(app_)
 connected_users = []
 notifies = []
 connected_teacher = ""
-user_config = Config("config.json")
+user_config = Config(ROOT_DIR + "/config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
 user_config.f_app = app_
 flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
@@ -216,6 +218,15 @@ def find_local_users():
     return jsonify({"users_data": data, "connected_users": connected_users})
 
 
+@app_.route('/logout')
+def logout():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    user_config.config = {}
+    user_config.save_config()
+    return redirect("/join")
+
+
 @app_.route("/get_other_file")
 def get_other_file():
     if connected_teacher == request.remote_addr:
@@ -249,6 +260,7 @@ def index():
 
 @app_.route("/files", methods=["GET", "POST"])
 def files():
+    print(request.headers)
     files = []
     for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
         files = i[2]
@@ -287,6 +299,18 @@ def select_file():
         return jsonify({'status': 'true'})
     except:
         return jsonify({'status': 'false'})
+
+@app_.route('/select_directory')
+def select_directory():
+    if request.host.split(':')[0] != request.remote_addr:
+        return jsonify({'status': 'false', 'error': 'Permission denied'})
+    try:
+        os.startfile(ROOT_DIR + f"/{request.args['f_name']}")
+        return jsonify({'status': 'true'})
+    except:
+        return jsonify({'status': 'false'})
+
+
 
 
 @app_.route("/delete_file")
@@ -350,10 +374,40 @@ def notifications():
         return jsonify({'status': 'false'})
 
 
+@app_.route('/tests')
+def tests():
+    return render_template("tests.html", active_item=2, user_config=user_config)
+
+
+@app_.route('/new_test', methods=["GET", "POST"])
+def new_test():
+    if request.method == "POST":
+        user_config["new_test"]["q"][int(request.form["n"])]["text"] = request.form["qtext"]
+        user_config["new_test"]["q"][int(request.form["n"])]["answer"] = request.form["qans"]
+        return render_template("new_test.html", active_item=2, user_config=user_config, contentColumn=True,
+                               current=int(request.form["n"]))
+    curr = 0
+    if request.args.keys().__len__() == 0:
+        user_config["new_test"] = {"title": "Новый тест", "q": [{"text": "Текст вопроса", "answer": "Ответ"}]}
+    else:
+        if "curr" in request.args:
+            curr = int(request.args["curr"])
+        # elif "save" in request.args:
+        #
+    if curr >= len(user_config["new_test"]["q"]):
+        user_config["new_test"]["q"].append({"text": "Текст вопроса", "answer": "Ответ"})
+        curr = len(user_config["new_test"]["q"]) - 1
+    return render_template("new_test.html", active_item=2, user_config=user_config, contentColumn=True, current=curr)
+
+
+
+
+
+
 app = QApplication(sys.argv)
 user_config.q_app = app
 window = MainWindow(app_)
 user_config.q_window = window
-# window.setWindowFlags(Qt.CustomizeWindowHint)
+window.setWindowFlags(Qt.CustomizeWindowHint)
 window.show()
 app.exec_()

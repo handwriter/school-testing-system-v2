@@ -1,6 +1,7 @@
 {% extends 'base_page.html' %}
 
 {% block scripts %}
+    <script src="/static/js/main.js"></script>
 <script>LoadUserData();</script>
 {% endblock %}
 
@@ -15,6 +16,7 @@
 {#    </form>#}
 <div class="title-block">
     <h2>Общедоступные файлы {% if not user_config["teacher"] and other_data.__len__() > 0 %}учителя{% endif %}</h2>
+    <a onclick="selectDirectory('SharedFiles');"><button>Открыть папку</button></a>
 </div>
 {#<label class="switch">#}
 {#<input type="checkbox" checked>#}

@@ -18,6 +18,7 @@ body {
     display: flex;
     flex-direction: column;
     background-image: url(/static/img/background.svg);
+    background-size: 185px;
 }
 
 h2 {
@@ -144,6 +145,8 @@ th:not(:nth-of-type(1)) {
 
 .settings {
     margin: 0px 10px 0px 10px;
+    margin-left: 2px;
+    margin-bottom: -3px;
 }
 
 .close {
@@ -427,4 +430,99 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.title-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-block a button {
+    margin-top: 0px;
+}
+
+.vert-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vert-btn svg {
+    width: 50px;
+    margin: 10px;
+}
+
+.vert-btn svg path {
+    fill: white;
+}
+
+.questions-list {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    justify-content: center;
+    padding: 0;
+}
+
+.questions-list li {
+    border: solid 1px white;
+    border-radius: 51px;
+    color: white;
+    font-family: 'Garet-Book';
+    min-width: 25px;
+    min-height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 3px;
+}
+
+.top-input {
+    background-color: #ffffff00;
+    border: 0;
+    color: snow;
+    border-bottom: solid 1px white;
+    font-family: 'Garet-Book';
+    overflow: visible;
+    width: 100%;
+    text-align: center;
+    outline: none;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.hor-scroll {
+    overflow-x: scroll;
+    width: 100%;
+    display: flex;
+}
+
+.q-form {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    width: 100%;
+    margin: 30px 0px;
+}
+
+.q-form textarea {
+    resize: vertical;
+    font-family: 'PTSans';
+    outline: none;
+}
+
+label {
+    color: white;
+    font-family: 'Garet-Book';
+}
+
+.buttons-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+li a {
+    text-decoration: none;
+    color: white;
 }

@@ -1,0 +1,28 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block main_content %}
+    <input type="text" class="top-input" value="{{ user_config["new_test"]["title"] }}">
+    <div class="hor-scroll">
+        <ul class="questions-list">
+            {% for i in range(user_config["new_test"]["q"].__len__()) %}
+                <li><a href="/new_test?curr={{ i }}">{{ i + 1 }}</a></li>
+            {% endfor %}
+            <li><a href="/new_test?curr={{ user_config["new_test"]["q"].__len__() }}">+</a></li>
+        </ul>
+    </div>
+    <form action="" method="post" class="q-form">
+        <input type="text" value="{{ current }}" style="display: none;" name="n">
+        <label for="qtext">Текст вопроса:</label>
+        <textarea id="qtext" name="qtext">{{ user_config["new_test"]["q"][current]["text"] }}</textarea>
+        <label for="qans">Ответ на вопрос:</label>
+        <input type="text" id="qans" name="qans" value="{{ user_config["new_test"]["q"][current]["answer"] }}">
+        <div class="buttons-block">
+            <a><button type="submit">Сохранить</button></a>
+            <a href="/new_test?save=true"><button class="">Завершить</button></a>
+        </div>
+    </form>
+{% endblock %}

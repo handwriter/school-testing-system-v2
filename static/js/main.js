@@ -34,7 +34,9 @@ function selectFile(f_name) {
     SendRequest("GET","/select_file", "f_name=" + f_name, function() {}, false);
 }
 
-
+function selectDirectory(f_name) {
+    SendRequest("GET","/select_directory", "f_name=" + f_name, function() {}, false);
+}
 
 function deleteFile(f_name) {
     SendRequest("GET","/delete_file", "f_name=" + f_name, function() {location.reload()}, false);

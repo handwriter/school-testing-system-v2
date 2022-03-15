@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link href="/static/css/main.css" rel="stylesheet">
+    <script>
+        function onContextMenu(e){
+            e.preventDefault();
+        }
+        document.addEventListener('contextmenu', onContextMenu, false);
+    </script>
 </head>
 <body>
     <form class="auth-form" action="" method="POST">

@@ -1,0 +1,8 @@
+{
+  "name": "school-testing-system-v2 — копия — копия",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@editorjs/editorjs": "^2.23.2"
+  }
+}
