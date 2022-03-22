@@ -495,6 +495,7 @@ input:checked + .slider:before {
     overflow-x: scroll;
     width: 100%;
     display: flex;
+    min-height: 66px;
 }
 
 .q-form {
@@ -509,6 +510,7 @@ input:checked + .slider:before {
     resize: vertical;
     font-family: 'PTSans';
     outline: none;
+    max-height: 200px;
 }
 
 label {
@@ -526,3 +528,29 @@ li a {
     text-decoration: none;
     color: white;
 }
+
+a {
+    text-decoration: none;
+}
+
+.btn-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow-y: overlay;
+}
+
+.btn-list a {
+    width: 32%;
+}
+
+.btn-list a:not(:nth-child(3n)) {
+    margin-right: 4px;
+}
+
+
+
+.btn-list a button {
+    width: 100%;
+}
+

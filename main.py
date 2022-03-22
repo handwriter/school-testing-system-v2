@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, jsonify, send_file
 import json
-from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QMouseEvent, QIcon
+# from PyQt5.QtWidgets import QMainWindow, QApplication
+# from PyQt5.QtWebEngineWidgets import QWebEngineView
+# from PyQt5.QtCore import Qt, QSize
+# from PyQt5.QtGui import QMouseEvent, QIcon
 import os
 from pathlib import Path
 from threading import Thread
@@ -37,28 +37,28 @@ IP = get_my_ip()
 if not Path(ROOT_DIR + "/SharedFiles/").exists():
     Path(ROOT_DIR + "/SharedFiles/").mkdir()
 
-class CustomQWebView(QWebEngineView):
-    def mousePressEvent(self, a0: QMouseEvent) -> None:
-        print(a0.button())
-
-
-class MainWindow(QMainWindow):
-    def __init__(self, f_app: Flask, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-        self.f_app = f_app
-        self.webEngineView = CustomQWebView()
-        self.setCentralWidget(self.webEngineView)
-        app_icon = QIcon()
-        app_icon.addFile('16.png', QSize(16, 16))
-        app_icon.addFile('32.png', QSize(32, 32))
-        app_icon.addFile('48.png', QSize(48, 48))
-        app_icon.addFile('48.png', QSize(64, 64))
-        app_icon.addFile('256.png', QSize(256, 256))
-        app_icon.addFile('512.png', QSize(512, 512))
-        app_icon.addFile('1024.png', QSize(1024, 1024))
-        app.setWindowIcon(app_icon)
-        with f_app.test_request_context("/"):
-            self.webEngineView.setHtml(render_template("empty_loading.html", ip=f"http://{IP}:874/"))
+# class CustomQWebView(QWebEngineView):
+#     def mousePressEvent(self, a0: QMouseEvent) -> None:
+#         print(a0.button())
+#
+#
+# class MainWindow(QMainWindow):
+#     def __init__(self, f_app: Flask, *args, **kwargs):
+#         super(MainWindow, self).__init__(*args, **kwargs)
+#         self.f_app = f_app
+#         self.webEngineView = CustomQWebView()
+#         self.setCentralWidget(self.webEngineView)
+#         app_icon = QIcon()
+#         app_icon.addFile('16.png', QSize(16, 16))
+#         app_icon.addFile('32.png', QSize(32, 32))
+#         app_icon.addFile('48.png', QSize(48, 48))
+#         app_icon.addFile('48.png', QSize(64, 64))
+#         app_icon.addFile('256.png', QSize(256, 256))
+#         app_icon.addFile('512.png', QSize(512, 512))
+#         app_icon.addFile('1024.png', QSize(1024, 1024))
+#         # app.setWindowIcon(app_icon)
+#         with f_app.test_request_context("/"):
+#             self.webEngineView.setHtml(render_template("empty_loading.html", ip=f"http://{IP}:874/"))
 
 
 class Config(object):
@@ -112,13 +112,16 @@ class Config(object):
 
 app_ = Flask(__name__)
 CORS(app_)
+
 connected_users = []
 notifies = []
 connected_teacher = ""
 user_config = Config(ROOT_DIR + "/config.json")
 kwargs = {'host': '0.0.0.0', 'port': 874, 'threaded': True, 'use_reloader': False, 'debug': False}
+
 user_config.f_app = app_
-flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
+
+# flaskThread = Thread(target=app_.run, daemon=True, kwargs=kwargs).start()
 
 
 @app_.route("/status.png")
@@ -376,7 +379,15 @@ def notifications():
 
 @app_.route('/tests')
 def tests():
-    return render_template("tests.html", active_item=2, user_config=user_config)
+    active_test_data = False
+    if connected_teacher != '' and not user_config["teacher"]:
+        active_test_data = requests.get(f"http://{connected_teacher}:874/active_test").json()
+    files = []
+    for i in os.walk(f"{ROOT_DIR}/SharedFiles/"):
+        files = list(filter(lambda x: x.split(".")[-1] == "ts", i[2]))
+        break
+    print(files)
+    return render_template("tests.html", active_item=2, user_config=user_config, files=files, active_test_data=active_test_data)
 
 
 @app_.route('/new_test', methods=["GET", "POST"])
@@ -384,6 +395,7 @@ def new_test():
     if request.method == "POST":
         user_config["new_test"]["q"][int(request.form["n"])]["text"] = request.form["qtext"]
         user_config["new_test"]["q"][int(request.form["n"])]["answer"] = request.form["qans"]
+        user_config["new_test"]["title"] = request.form["test-title"]
         return render_template("new_test.html", active_item=2, user_config=user_config, contentColumn=True,
                                current=int(request.form["n"]))
     curr = 0
@@ -392,22 +404,44 @@ def new_test():
     else:
         if "curr" in request.args:
             curr = int(request.args["curr"])
-        # elif "save" in request.args:
-        #
+        elif "open" in request.args:
+            with open(f'{ROOT_DIR}/SharedFiles/{request.args["open"]}', 'r') as fp:
+                user_config["new_test"] = json.loads(fp.read())
+        elif "save" in request.args:
+            with open(f'{ROOT_DIR}/SharedFiles/{user_config["new_test"]["title"]}.ts', 'w') as fp:
+                json.dump(user_config["new_test"], fp)
+            return redirect("/tests")
     if curr >= len(user_config["new_test"]["q"]):
         user_config["new_test"]["q"].append({"text": "Текст вопроса", "answer": "Ответ"})
         curr = len(user_config["new_test"]["q"]) - 1
     return render_template("new_test.html", active_item=2, user_config=user_config, contentColumn=True, current=curr)
 
+@app_.route("/active_stats")
+def active_stats():
+    return jsonify(user_config["active_test"])
+
+@app_.route("/active_test")
+def active_test():
+    if user_config["active_test"]:
+        return jsonify({"status": True, "filename": user_config["active_test"]["title"] + ".ts"})
+    else:
+        return jsonify({"status": False, "filename": "false"})
 
 
+@app_.route('/start_test', methods=["GET", "POST"])
+def start_test():
+    with open(f'{ROOT_DIR}/SharedFiles/{request.args["name"]}.ts', 'r') as fp:
+        user_config["active_test"] = json.loads(fp.read())
+        user_config["active_test"]["u"] = {}
+    return redirect("active_stats")
 
+os.system(f"start \"\" http://{IP}:874/")
+app_.run("0.0.0.0", 874)
 
-
-app = QApplication(sys.argv)
-user_config.q_app = app
-window = MainWindow(app_)
-user_config.q_window = window
-window.setWindowFlags(Qt.CustomizeWindowHint)
-window.show()
-app.exec_()
+# app = QApplication(sys.argv)
+# user_config.q_app = app
+# window = MainWindow(app_)
+# user_config.q_window = window
+# window.setWindowFlags(Qt.CustomizeWindowHint)
+# window.show()
+# app.exec_()

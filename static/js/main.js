@@ -111,6 +111,10 @@ function LoadUserData() {
     SendRequest("GET","/user_data", "", Handler, false);
 }
 
+function ChangeFormHiddenInputData(input_id, output_id) {
+    document.getElementById(output_id).value = document.getElementById(input_id).value;
+}
+
 function CreateRequest()
 {
     var Request = false;

@@ -4,8 +4,26 @@
 <script>LoadUserData();</script>
 {% endblock %}
 
+{% block mainAdditionalStyles %}display: flex;flex-direction: column;{% endblock %}
+
 {% block main_content %}
     <h2>Тесты</h2>
-
-    <a href="/"> <button class="vert-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 455 455" style="enable-background:new 0 0 455 455" xml:space="preserve"><path d="M455 213H243V0h-30v213H0v30h213v212h30V243h212z"/></svg>Создать новый тест</button></a>
+    {% if user_config['teacher'] %}
+    <div class="btn-list">
+        <a href="/new_test"> <button class="vert-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 455 455" style="enable-background:new 0 0 455 455" xml:space="preserve"><path d="M455 213H243V0h-30v213H0v30h213v212h30V243h212z"/></svg>Создать новый тест</button></a>
+        {% for file in files %}
+        <a href="/new_test?open={{ file }}"> <button class="vert-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.4 194.4" style="enable-background:new 0 0 194.436 194.436" xml:space="preserve"><path d="M192 35 160 2a8 8 0 0 0-11 0l-32 33-62 62-2 5-1 33a8 8 0 0 0 7 8l34-1 5-2 94-95c3-3 3-8 0-10zm-37 27-22-22 22-22 21 22-21 22zm-66 65-22 1 1-23 54-55 22 22-55 55z"/><path d="M132 117c-4 0-7 3-7 8v54H15V70h55a7 7 0 1 0 0-15H8c-5 0-8 3-8 7v125c0 4 3 7 8 7h124c4 0 8-3 8-7v-62c0-5-4-8-8-8z"/></svg>{{ file }}</button></a>
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if active_test_data %}
+            {% if active_test_data["status"] %}
+                <a href="/new_test?open={{ active_test_data["filename"] }}"> <button class="vert-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.4 194.4" style="enable-background:new 0 0 194.436 194.436" xml:space="preserve"><path d="M192 35 160 2a8 8 0 0 0-11 0l-32 33-62 62-2 5-1 33a8 8 0 0 0 7 8l34-1 5-2 94-95c3-3 3-8 0-10zm-37 27-22-22 22-22 21 22-21 22zm-66 65-22 1 1-23 54-55 22 22-55 55z"/><path d="M132 117c-4 0-7 3-7 8v54H15V70h55a7 7 0 1 0 0-15H8c-5 0-8 3-8 7v125c0 4 3 7 8 7h124c4 0 8-3 8-7v-62c0-5-4-8-8-8z"/></svg>{{ active_test_data["filename"] }}</button></a>
+            {% else %}
+                <h2>Нет активных тестов</h2>
+            {% endif %}
+        {% else %}
+            <h2>Нет активных тестов</h2>
+        {% endif %}
+    {% endif %}
 {% endblock %}

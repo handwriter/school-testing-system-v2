@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main_content %}
-    <input type="text" class="top-input" value="{{ user_config["new_test"]["title"] }}">
+    <input type="text" class="top-input" id="test-title" oninput="ChangeFormHiddenInputData('test-title', 'test-title-send');" value="{{ user_config["new_test"]["title"] }}">
     <div class="hor-scroll">
         <ul class="questions-list">
             {% for i in range(user_config["new_test"]["q"].__len__()) %}
@@ -15,6 +15,7 @@
         </ul>
     </div>
     <form action="" method="post" class="q-form">
+        <input type="text" name="test-title" id="test-title-send" style="display: none;" value="{{ user_config["new_test"]["title"] }}">
         <input type="text" value="{{ current }}" style="display: none;" name="n">
         <label for="qtext">Текст вопроса:</label>
         <textarea id="qtext" name="qtext">{{ user_config["new_test"]["q"][current]["text"] }}</textarea>
@@ -22,7 +23,8 @@
         <input type="text" id="qans" name="qans" value="{{ user_config["new_test"]["q"][current]["answer"] }}">
         <div class="buttons-block">
             <a><button type="submit">Сохранить</button></a>
-            <a href="/new_test?save=true"><button class="">Завершить</button></a>
+            <a href="/new_test?save=true"><button type="button">Завершить</button></a>
+            <a href="/start_test?name={{ user_config["new_test"]["title"] }}"><button type="button">Запустить</button></a>
         </div>
     </form>
 {% endblock %}

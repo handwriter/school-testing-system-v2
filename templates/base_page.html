@@ -222,7 +222,7 @@
             <p>ТЕСТЫ</p>
         </div></a>
     </div>
-    <div class="main-content" style="{% if contentColumn %}display: flex;flex-direction: column;align-items: center;{% endif %}">
+    <div class="main-content" style="{% if contentColumn %}display: flex;flex-direction: column;align-items: center;{% endif %}{% block mainAdditionalStyles %}{% endblock %}">
         {% block main_content %}{% endblock %}
     </div>
     <div class="loader-blur inactive" id="loader">
