@@ -21,7 +21,7 @@ function timeoutNotifies() {
 
 
 function onContextMenu(e){
-    e.preventDefault();
+    // e.preventDefault();
     // showMenu(e.pageX, e.pageY);
     // document.addEventListener('mousedown', onMouseDown, false);
 }

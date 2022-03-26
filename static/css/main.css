@@ -133,25 +133,24 @@ th:not(:nth-of-type(1)) {
 }
 
 .main-content h2:first-of-type {
-    margin: 0px;
-    margin-bottom: 10px;
+    margin: 0px 0px 10px;
 }
 
 .username {
-    margin: 0px;
     color: white;
     font-family: "Garet-Book";
+    margin: 0px 5px 0px 0px;
 }
 
 .settings {
-    margin: 0px 10px 0px 10px;
-    margin-left: 2px;
-    margin-bottom: -3px;
+    margin: 0px 10px -3px 2px;
 }
 
 .close {
     margin-right: 5px;
     height: 22px;
+    display: flex;
+    align-items: center;
 }
 
 .settings path, .close svg path {
@@ -191,6 +190,7 @@ button {
     border-radius: 20px;
     outline: none;
     margin-top: 10px;
+    margin-top: 10px;
 }
 
 form.auth-form input[type="text"] {
@@ -214,6 +214,8 @@ form.auth-form input[type="text"] {
     padding: 8px 0px 8px 22px;
     border-style: hidden;
     font-family: "Garet-Book";
+    color: black;
+    background-color: white;
 }
 
 form.auth-form input[type="text"]:focus, form.auth-form input[type="text"]:active {
@@ -295,6 +297,7 @@ table.inactive {
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollbarThumb);
+  background-color: var(--scrollbarThumb);
   border-radius: var(--scrollbarBorderRadius);
   border: var(--scrollbarBorder);
 }
@@ -309,16 +312,16 @@ table.inactive {
     margin-right: 10px;
 }
 
-.file-list li svg, .file-list li a svg {
+.file-list li svg, .file-list li a {
     fill: white;
     cursor: pointer;
 }
 
-.file-list li svg:first-of-type, .file-list li a svg:first-of-type {
+.file-list li svg:first-of-type, .file-list li a:first-of-type {
     margin-left: auto;
 }
 
-.file-list li svg:not(:last-of-type), .file-list li a svg:not(:last-of-type)
+.file-list li svg:not(:last-of-type), .file-list li a:not(:last-of-type)
 {
     margin-right: 5px;
 }
@@ -511,6 +514,10 @@ input:checked + .slider:before {
     font-family: 'PTSans';
     outline: none;
     max-height: 200px;
+    background-color: rgb(37, 62, 93);
+    border: 1px solid rgb(85, 123, 170);
+    color: white;
+    padding: 5px;
 }
 
 label {
@@ -542,6 +549,7 @@ a {
 
 .btn-list a {
     width: 32%;
+    display: flex;
 }
 
 .btn-list a:not(:nth-child(3n)) {
@@ -554,3 +562,44 @@ a {
     width: 100%;
 }
 
+h1 {
+    font-family: 'Garet-Book';
+    color: white;
+}
+
+h1.title {
+    border-bottom: solid 1px white;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+form input {
+    background-color: #253E5D;
+    outline: none;
+    border: solid 1px hsl(213deg 33% 50%);
+    color: white;
+    padding: 5px;
+    font-family: 'PTSans';
+}
+
+.red-btn {
+    background-color: #FF9400;
+}
+
+p {
+    color: white;
+    font-family: 'Garet-Book';
+    margin: 0;
+}
+
+.edit-text {
+    font-family: 'PTSans';
+    outline: none;
+    max-height: 200px;
+    background-color: rgb(37, 62, 93);
+    border: 1px solid rgb(85, 123, 170);
+    color: white;
+    padding: 5px;
+    font-size: 13.2px;
+}

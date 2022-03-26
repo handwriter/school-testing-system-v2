@@ -1,0 +1,28 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block main_content %}
+{#    <h1 class="title">Title</h1>#}
+    <div class="hor-scroll">
+        <ul class="questions-list">
+            {% for i in range(res["count"]) %}
+            <li><a href="/test/{{ loop.index0 }}">{{ loop.index }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <form action="" method="post" class="q-form">
+        {% autoescape false %}
+        {{ res["data"] }}
+        {% endautoescape %}
+        <label for="qans">Ответ на вопрос:</label>
+        <input type="text" id="qans" name="qans" value="{{ ans }}">
+        <div class="buttons-block">
+            {% if res["count"] %}
+            <a><button type="submit">Далее</button></a>
+            <a href="/test"><button type="button">Завершить</button></a>
+        </div>
+    </form>
+{% endblock %}

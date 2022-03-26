@@ -1,0 +1,25 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block main_content %}
+    <h2>Импортировать тест {{ platform }}</h2>
+    <form action="" method="post" class="q-form">
+        <label for="qid">{% if platform_index == 1 %}Номер КИМ:{% else %}ID Теста:{% endif %}</label>
+        <input type="number" id="qid" name="qid">
+        {% if platform_index == 0 %}
+        <label for="subj">Категория теста:</label>
+        <input type="text" list="subj" name="subj" />
+        <datalist id="subj">
+            {% for sub in subjects %}
+            <option>{{ sub }}</option>
+            {% endfor %}
+        </datalist>
+        {% endif %}
+        <div class="buttons-block">
+            <a><button type="submit">Загрузить</button></a>
+        </div>
+    </form>
+{% endblock %}
