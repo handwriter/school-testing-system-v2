@@ -471,8 +471,10 @@ def active_stats():
 
 @app_.route("/save_answer", methods=["POST"])
 def save_answer():
-    user_config["active_test"]["u"][request.remote_addr] = {}
-    user_config["active_test"]["u"][request.remote_addr][request.json["curr"]] = request.json["answer"]
+    if request.remote_addr not in user_config["active_test"]["u"]:
+        user_config["active_test"]["u"][request.remote_addr] = {"status": True}
+    if user_config["active_test"]["u"][request.remote_addr]["status"]:
+        user_config["active_test"]["u"][request.remote_addr][request.json["curr"]] = request.json["answer"]
     return jsonify({"status": False})
 
 @app_.route("/get_answer", methods=["GET"])
@@ -482,6 +484,26 @@ def get_answer():
             return jsonify({"answer": user_config["active_test"]["u"][request.remote_addr][request.json["curr"]]})
     return jsonify({"answer": ""})
 
+@app_.route("/test_result", methods=["POST"])
+def test_result():
+    if request.remote_addr in user_config["active_test"]["u"]:
+        user_config["active_test"]["u"][request.remote_addr]["status"] = False
+        res = 0
+        for i in user_config["active_test"]["u"][request.remote_addr]:
+            if not i.isdigit():
+                continue
+            if user_config["active_test"]["u"][request.remote_addr][i] == user_config["active_test"]["q"][int(i)]["answer"]:
+                res += 1
+        return jsonify({"result": res})
+
+    return jsonify({"result": 0})
+
+@app_.route("/finish_test")
+def finish_test():
+    res = requests.post(f"http://{connected_teacher}:874/test_result").json()
+    res2 = requests.get(f"http://{connected_teacher}:874/active_test").json()
+    return render_template("finished_test.html", user_config=user_config, cur=int(res["result"]),
+                           max=int(res2["count"]))
 
 
 
@@ -495,7 +517,8 @@ def active_test():
             return jsonify(
                 {"status": False, "data": user_config["active_test"]["q"][int(request.args["curr"])]["text"],
                  "count": len(user_config["active_test"]["q"])})
-        return jsonify({"status": True, "filename": user_config["active_test"]["title"] + ".ts"})
+        return jsonify({"status": True, "filename": user_config["active_test"]["title"] + ".ts",
+                        "count": len(user_config["active_test"]["q"])})
     else:
         return jsonify({"status": False, "filename": "false"})
 

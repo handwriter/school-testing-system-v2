@@ -1,0 +1,15 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block mainAdditionalStyles %}display: flex;justify-content:center;align-items:center;padding:0;{% endblock %}
+
+{% block main_content %}
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="img-finish-test"><path d="M256 512 32 384V128L256 0l224 128v256ZM40 379l216 124 216-124V133L256 9 40 133Z" fill="#231f20"/><path d="m229 330-67-66 28-28 39 39 93-93 28 28Zm-55-66 55 54 109-108-16-16-93 92-39-38Z" fill="#231f20"/></svg>
+    <div class="vertical-box">
+        <h1>Тест завершен</h1>
+        <h1>{{ cur }}/{{ max }} баллов</h1>
+    </div>
+{% endblock %}

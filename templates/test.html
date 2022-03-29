@@ -9,20 +9,23 @@
     <div class="hor-scroll">
         <ul class="questions-list">
             {% for i in range(res["count"]) %}
-            <li><a href="/test/{{ loop.index0 }}">{{ loop.index }}</a></li>
+            <li {% if curr == loop.index0 %}class="active"{% endif %}><a href="/test/{{ loop.index0 }}">{{ loop.index }}</a></li>
             {% endfor %}
         </ul>
     </div>
     <form action="" method="post" class="q-form">
+        <p>
         {% autoescape false %}
         {{ res["data"] }}
         {% endautoescape %}
+        </p>
         <label for="qans">Ответ на вопрос:</label>
         <input type="text" id="qans" name="qans" value="{{ ans }}">
         <div class="buttons-block">
-            {% if res["count"] %}
+            {% if res["count"] != curr + 1 %}
             <a><button type="submit">Далее</button></a>
-            <a href="/test"><button type="button">Завершить</button></a>
+            {% endif %}
+            <a href="/finish_test"><button type="button">Завершить</button></a>
         </div>
     </form>
 {% endblock %}

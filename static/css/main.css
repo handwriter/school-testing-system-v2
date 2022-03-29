@@ -39,19 +39,23 @@ h2.inactive {
     flex-direction: row;
     justify-content: space-evenly;
     background-color: #253E5D;
+    flex-wrap: wrap;
 }
 
 .menu-elem {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 158px;
     height: 79px;
     align-items: center;
+    padding: 0px 5px 0px 5px;
 }
 
 .menu a {
     text-decoration: none;
+    max-width: 158px;
+    width: 33%;
+    min-width: fit-content;
 }
 
 .menu a:hover {
@@ -179,6 +183,9 @@ form.auth-form {
     left: 50%;
     margin-left: -152px;
     margin-top: -106.5px;
+    -webkit-box-shadow: 0px 0px 30px 8px rgba(0, 0, 0, 0.36);
+    -moz-box-shadow: 0px 0px 30px 8px rgba(0, 0, 0, 0.36);
+    box-shadow: 0px 0px 30px 8px rgba(0, 0, 0, 0.36);
 }
 
 button {
@@ -365,6 +372,9 @@ a button {
 
 .buttons-block {
     display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 button.inactive {
@@ -478,6 +488,10 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
     margin: 0px 3px;
+}
+
+.questions-list li.active {
+    background-color: #655EA7;
 }
 
 .top-input {
@@ -602,4 +616,28 @@ p {
     color: white;
     padding: 5px;
     font-size: 13.2px;
+}
+
+form p {
+    border-bottom: 1px solid white;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.vertical-box {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.vertical-box h1 {
+    margin: 0;
+}
+
+svg.img-finish-test {
+    width: 100px;
+}
+
+svg path {
+    fill: white;
 }

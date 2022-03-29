@@ -9,7 +9,7 @@
     <div class="hor-scroll">
         <ul class="questions-list">
             {% for i in range(user_config["new_test"]["q"].__len__()) %}
-                <li><a href="/new_test?curr={{ i }}">{{ i + 1 }}</a></li>
+                <li {% if current == loop.index0 %}class="active"{% endif %}><a href="/new_test?curr={{ i }}">{{ i + 1 }}</a></li>
             {% endfor %}
             <li><a href="/new_test?curr={{ user_config["new_test"]["q"].__len__() }}">+</a></li>
         </ul>
@@ -17,7 +17,7 @@
     <form action="" method="post" class="q-form">
         <input type="text" name="test-title" id="test-title-send" style="display: none;" value="{{ user_config["new_test"]["title"] }}">
         <input type="text" value="{{ current }}" style="display: none;" name="n">
-        <div class="edit-text" contenteditable="true" role="textbox">{{ user_config["new_test"]["q"][current]["text"] }}</div>
+<!--        <div class="edit-text" contenteditable="true" role="textbox">{{ user_config["new_test"]["q"][current]["text"] }}</div>-->
         <label for="qtext">Текст вопроса:</label>
         <textarea id="qtext" name="qtext">{{ user_config["new_test"]["q"][current]["text"] }}</textarea>
         <label for="qans">Ответ на вопрос:</label>
