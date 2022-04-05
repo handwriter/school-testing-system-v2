@@ -1,9 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify, send_file
 import json
-# from PyQt5.QtWidgets import QMainWindow, QApplication
-# from PyQt5.QtWebEngineWidgets import QWebEngineView
-# from PyQt5.QtCore import Qt, QSize
-# from PyQt5.QtGui import QMouseEvent, QIcon
 import os
 from pathlib import Path
 from threading import Thread
@@ -467,7 +463,13 @@ def new_test():
 
 @app_.route("/active_stats")
 def active_stats():
-    return jsonify(user_config["active_test"])
+    return render_template("active_stats.html", user_config=user_config, active_item=2, active_test=user_config["active_test"])
+
+@app_.route("/active_stats/<string:ip>")
+def active_stats_by_ip(ip):
+    return render_template("active_stats.html", user_config=user_config, active_item=2, active_test=user_config["active_test"])
+
+
 
 @app_.route("/save_answer", methods=["POST"])
 def save_answer():
@@ -534,6 +536,8 @@ def start_test():
 @app_.route('/test/<int:curr>', methods=["GET", "POST"])
 def test(curr):
     if request.method == "POST":
+        if "saveanswer" in request.form.keys():
+            return redirect(f"/test/{curr}")
         requests.post(f"http://{connected_teacher}:874/save_answer", json={"curr": str(curr), "answer": request.form["qans"]})
         return redirect(f"/test/{curr + 1}")
     #curr = 0
@@ -603,7 +607,7 @@ def tray_process():
 
 sys.stdout.flush()
 trayThread = Thread(target=tray_process, daemon=True).start()
-#os.system(f"start \"\" http://{IP}:874/")
+os.system(f"start \"\" http://{IP}:874/")
 app_.run("0.0.0.0", 874)
 
 # app = QApplication(sys.argv)

@@ -1,0 +1,28 @@
+{% extends 'base_page.html' %}
+
+{% block scripts %}
+<script>LoadUserData();</script>
+{% endblock %}
+
+{% block main_content %}
+<h2 class="center">Статистика текущего теста:</h2>
+<table class="wide-table" id="usersTable">
+  <thead>
+    <tr>
+      <th>Имя</th>
+      <th>Статус</th>
+      <th>Результат</th>
+    </tr>
+  </thead>
+  <tbody id="usersList">
+    <tr>
+        {% for user in active_test["u"] %}
+        <td>{{ user }}</td>
+        <td>{% if active_test["u"][user]["status"] %}Выполняется{% else %}Завершен{% endif %}</td>
+        <td><a><button>Просмотреть</button></a></td>
+        {% endfor %}
+    </tr>
+
+  </tbody>
+</table>
+{% endblock %}

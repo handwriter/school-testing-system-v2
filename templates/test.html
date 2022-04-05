@@ -24,6 +24,9 @@
         <div class="buttons-block">
             {% if res["count"] != curr + 1 %}
             <a><button type="submit">Далее</button></a>
+            {% else %}
+            <a><button type="submit">Сохранить</button></a>
+            <input type="text" id="saveanswer" name="saveanswer" value="true">
             {% endif %}
             <a href="/finish_test"><button type="button">Завершить</button></a>
         </div>
